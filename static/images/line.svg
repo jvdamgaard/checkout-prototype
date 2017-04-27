@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1602px" height="2px" viewBox="0 0 1602 2" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch Beta 43.2 (39068) - http://www.bohemiancoding.com/sketch -->
+    <title>Line</title>
+    <desc>Created with Sketch Beta.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="compositions/checkoutFlow/desktop" transform="translate(1.000000, -23.000000)" stroke="#6A656B">
+            <path d="M0,24 L1600,24" id="Line"></path>
+        </g>
+    </g>
+</svg>

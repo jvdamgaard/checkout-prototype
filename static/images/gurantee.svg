@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="24px" viewBox="0 0 16 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch Beta 43.2 (39068) - http://www.bohemiancoding.com/sketch -->
+    <title>elements/icons/gurantee</title>
+    <desc>Created with Sketch Beta.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="compositions/checkoutFooter/desktop" transform="translate(-68.000000, -64.000000)" fill-rule="nonzero" fill="#6A656B">
+            <g id="Group-5">
+                <g id="Group-4" transform="translate(64.000000, 64.000000)">
+                    <g id="elements/icons/guranteeInactive">
+                        <path d="M7.55555556,16.8888889 L7.55555556,24 L12,20.4444444 L16.4444444,24 L16.4444444,16.8888889 L7.55555556,16.8888889 Z M12,9.86864911e-16 C16.418278,2.1711028e-15 20,3.581722 20,8 C20,12.418278 16.418278,16 12,16 C7.581722,16 4,12.418278 4,8 C4,3.581722 7.581722,9.86864911e-16 12,0 L12,9.86864911e-16 Z M12,2.88888889 L10.3591111,5.82222222 L7.02222222,6.45422222 L9.34488889,8.89866667 L8.92355556,12.2222222 L12,10.8 L15.0764444,12.2222222 L14.6551111,8.89866667 L16.9777778,6.45422222 L13.6408889,5.82222222 L12,2.88888889 Z" id="Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
