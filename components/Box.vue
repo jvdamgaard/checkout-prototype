@@ -59,6 +59,7 @@
     padding: 0.75rem 1rem;
     margin-top: 0.25rem;
     border: 1px solid var(--color-grey-light);
+    background-color: var(--color-white);
   }
   .Box input:focus, .Box textarea:focus {
     outline: 0;
@@ -72,6 +73,10 @@
     display: inline-block;
     width: auto;
     margin: 0 1rem 0.5rem 0;
+  }
+  .Box input.inline {
+    display: inline-block;
+    width: auto;
   }
   .Box .description {
     font-size: 0.8125rem;

@@ -51,6 +51,7 @@
   }
 
   .CtaButton--ghost {
+    color: var(--color-primary);
     border: 1px solid var(--color-primary);
   }
   .CtaButton--ghost:hover {

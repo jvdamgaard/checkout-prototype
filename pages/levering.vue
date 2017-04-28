@@ -3,11 +3,8 @@
     <h1>Levering</h1>
     <row>
       <column width="4">
-        <box :focus="true">
+        <box>
           <h2>Leveringsadresse</h2>
-          <p class="Levering-right">
-            <a href="#" @click.prevent="copyInvoice">Kopier faktureringsadressen</a>
-          </p>
           <label for="name">Navn *</label>
           <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="order.delivery.name" @input="updateName" />
           <row :style="{ padding: 0, margin: '-0.5rem' }">
@@ -24,11 +21,11 @@
           <input type="text" id="extra" ref="extra" placeholder="Afdeling 3083, stue 7" maxlength="40" :value="order.delivery.extra" @input="updateExtra" />
           <p class="description">Eksempelvis afdeling og stue på hospital. {{order.delivery.extra ? order.delivery.extra.length : 0}} af 40 tegn brugt.</p>
           <row :style="{ padding: 0, margin: '-0.5rem' }">
-            <column width="3">
+            <column width="4">
               <label for="zip">Postnummer *</label>
               <input type="text" id="zip" ref="zip" placeholder="8000" :value="order.delivery.zip" @input="updateZip" />
             </column>
-            <column width="9">
+            <column width="8">
               <label for="city">By *</label>
               <input type="text" id="city" ref="city" placeholder="Aarhus" :value="order.delivery.city" @input="updateCity" />
             </column>
@@ -54,7 +51,7 @@
           </div>
           <h3>Modtag SMS om levering</h3>
           <label for="phone">Mobilnummer</label>
-          <input type="text" id="phone" ref="phone" placeholder="12 34 56 78" :value="order.phone" @input="updatePhone" />
+          <input type="tel" id="phone" ref="phone" placeholder="12 34 56 78" :value="order.delivery.phone" @input="updatePhone" />
           <p class="description">Vi sender en sms aftenen inden med et mere præcist leveringsinterval på 4 timer samt en sms når buketten er leveret.</p>
         </box>
       </column>
@@ -133,7 +130,6 @@ export default {
   },
   data() {
     return {
-      boxFocus: 1,
       fromDate: formatDate(fromDate),
       toDate: formatDate(toDate),
     };
@@ -141,14 +137,11 @@ export default {
   computed: {
     ...mapState({
       order: state => state.order,
-      step: state => state.steps[2],
-      nextStep: state => state.steps.find((step, i) => ((i !== 2 && !step.valid) || i === 4)),
+      step: state => state.steps[1],
+      nextStep: state => state.steps.find((step, i) => ((i !== 1 && !step.valid) || i === 3)),
     }),
   },
   methods: {
-    setFocusOn(number) {
-      this.boxFocus = number;
-    },
     updateName(e) {
       this.$store.dispatch('updateDelivery', { name: e.target.value });
     },
@@ -177,7 +170,7 @@ export default {
       this.$store.dispatch('updateDelivery', { card: e.target.value });
     },
     updatePhone(e) {
-      this.$store.dispatch('updateOrder', { phone: e.target.value });
+      this.$store.dispatch('updateDelivery', { phone: e.target.value });
     },
     focusOnInvalidField() {
       const refs = [
@@ -191,9 +184,6 @@ export default {
       if (nextInput) {
         nextInput.focus();
       }
-    },
-    copyInvoice() {
-      this.$store.dispatch('updateDelivery', this.order.invoice);
     },
   },
   mounted() {

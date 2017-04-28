@@ -1,8 +1,5 @@
 export const state = {
   order: {
-    name: null,
-    email: null,
-    phone: null,
     invoice: {
       name: null,
       street: null,
@@ -10,6 +7,16 @@ export const state = {
       extra: null,
       zip: null,
       city: null,
+      email: null,
+    },
+    payment: {
+      type: 'card',
+      details: {
+        number: '',
+        month: '',
+        year: '',
+        cvc: '',
+      },
     },
     delivery: {
       name: null,
@@ -26,7 +33,7 @@ export const state = {
         value: '08:00 - 16:00',
         selected: false,
       }],
-      card: null,
+      phone: null,
     },
     products: [{
       image: 'https://flowr.dk/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/b/o/boeket_sk1_300.png',
@@ -48,19 +55,19 @@ export const state = {
   steps: [{
     title: 'Bruger',
     path: '/bruger/',
-    valid: false,
+    valid: true,
   }, {
-    title: 'Fakturering',
-    path: '/fakturering/',
-    valid: false,
-  }, {
+  //   title: 'Fakturering',
+  //   path: '/fakturering/',
+  //   valid: false,
+  // }, {
     title: 'Levering',
     path: '/levering/',
     valid: false,
   }, {
     title: 'Betaling',
     path: '/betaling/',
-    valid: true,
+    valid: false,
   }, {
     title: 'Bekræft',
     path: '/bekraeft/',
@@ -70,28 +77,24 @@ export const state = {
 
 export const mutations = {
   checkValidation(s) {
-    s.steps[0].valid = (
-      !!s.order.name && // should be set
-      !!s.order.email // should be set (validate for email)
-    );
     s.steps[1].valid = (
+      !!s.order.delivery.name && // should be set
+      !!s.order.delivery.street && // should be set
+      !!s.order.delivery.number && // should be set
+      !!s.order.delivery.zip && // should be set
+      !!s.order.delivery.city && // should be set
+      !!s.order.delivery.date // should be set
+    );
+    s.steps[2].valid = (
+      !!s.order.invoice.email && // should be set
       !!s.order.invoice.name && // should be set
       !!s.order.invoice.street && // should be set
       !!s.order.invoice.zip && // should be set
       !!s.order.invoice.city // should be set
     );
-    s.steps[2].valid = (
-      !!s.order.delivery.name && // should be set
-      !!s.order.delivery.street && // should be set
-      !!s.order.delivery.zip && // should be set
-      !!s.order.delivery.city && // should be set
-      !!s.order.delivery.date // should be set
-    );
-    s.steps[4].valid = (
-      !!s.steps[0].valid && // should be set
+    s.steps[3].valid = (
       !!s.steps[1].valid && // should be set
-      !!s.steps[2].valid && // should be set
-      !!s.steps[3].valid // should be set
+      !!s.steps[2].valid // should be set
     );
   },
   updateName(s, val) {
@@ -100,14 +103,14 @@ export const mutations = {
     }
     s.order.name = val;
   },
-  updateEmail(s, val) { s.order.email = val; },
-  updatePhone(s, val) { s.order.phone = val; },
+  updateInvoiceEmail(s, val) { s.order.invoice.email = val; },
   updateInvoiceName(s, val) { s.order.invoice.name = val; },
   updateInvoiceStreet(s, val) { s.order.invoice.street = val; },
   updateInvoiceNumber(s, val) { s.order.invoice.number = val; },
   updateInvoiceExtra(s, val) { s.order.invoice.extra = val; },
   updateInvoiceZip(s, val) { s.order.invoice.zip = val; },
   updateInvoiceCity(s, val) { s.order.invoice.city = val; },
+  updatePaymentNumber(s, val) { s.order.payment.details.number = val; },
   updateDeliveryName(s, val) { s.order.delivery.name = val; },
   updateDeliveryStreet(s, val) { s.order.delivery.street = val; },
   updateDeliveryNumber(s, val) { s.order.delivery.number = val; },
@@ -122,6 +125,7 @@ export const mutations = {
       selected: (time.value === val),
     }));
   },
+  updateDeliveryPhone(s, val) { s.order.delivery.phone = val; },
   updateProduct(s, size) {
     s.order.products = s.order.products.map(product => ({
       ...product,
@@ -131,22 +135,21 @@ export const mutations = {
 };
 
 export const actions = {
-  updateOrder({ commit }, { name, phone, email }) {
-    if (name !== undefined) { commit('updateName', name); }
-    if (email !== undefined) { commit('updateEmail', email); }
-    if (phone !== undefined) { commit('updatePhone', phone); }
-    commit('checkValidation');
-  },
-  updateInvoice({ commit }, { name, street, number, extra, zip, city }) {
+  updateInvoice({ commit }, { name, street, number, extra, zip, city, email }) {
     if (name !== undefined) { commit('updateInvoiceName', name); }
     if (street !== undefined) { commit('updateInvoiceStreet', street); }
     if (number !== undefined) { commit('updateInvoiceNumber', number); }
     if (extra !== undefined) { commit('updateInvoiceExtra', extra); }
     if (zip !== undefined) { commit('updateInvoiceZip', zip); }
     if (city !== undefined) { commit('updateInvoiceCity', city); }
+    if (email !== undefined) { commit('updateInvoiceEmail', email); }
     commit('checkValidation');
   },
-  updateDelivery({ commit }, { name, street, number, extra, zip, city, date, time, card }) {
+  updatePayment({ commit }, { number }) {
+    if (number !== undefined) { commit('updatePaymentNumber', number); }
+    commit('checkValidation');
+  },
+  updateDelivery({ commit }, { name, street, number, extra, zip, city, date, time, card, phone }) {
     if (name !== undefined) { commit('updateDeliveryName', name); }
     if (street !== undefined) { commit('updateDeliveryStreet', street); }
     if (number !== undefined) { commit('updateDeliveryNumber', number); }
@@ -156,6 +159,7 @@ export const actions = {
     if (date !== undefined) { commit('updateDeliveryDate', date); }
     if (time !== undefined) { commit('updateDeliveryTime', time); }
     if (card !== undefined) { commit('updateDeliveryCard', card); }
+    if (phone !== undefined) { commit('updateDeliveryPhone', phone); }
     commit('checkValidation');
   },
   updateProduct({ commit }, { size }) {

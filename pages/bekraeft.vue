@@ -65,7 +65,7 @@
             </template>
             {{order.delivery.zip}} {{order.delivery.city}}
           </p>
-          <h3>Kort</h3>
+          <h3>Betaling</h3>
           <p class="description">
             {{order.delivery.card}}
           </p>
@@ -98,6 +98,12 @@
             </column>
             <column width="6">
               Levering
+            </column>
+            <column width="6" style="text-align:right">
+              0,-
+            </column>
+            <column width="6">
+              Kortgebyr
             </column>
             <column width="6" style="text-align:right">
               0,-
@@ -137,7 +143,7 @@ export default {
     ...mapState({
       order: state => state.order,
       step: state => state.steps[0],
-      nextStep: state => state.steps.find((step, i) => ((i !== 4 && !step.valid) || i === 4)),
+      nextStep: state => state.steps.find((step, i) => ((i !== 3 && !step.valid) || i === 3)),
     }),
     deliveryTime() {
       return this.order.delivery.times.find(time => time.selected).value;

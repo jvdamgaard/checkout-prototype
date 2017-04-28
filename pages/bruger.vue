@@ -4,16 +4,16 @@
     <row>
       <column width="2" />
       <column width="4">
-        <box :focus="boxFocus === 0" @click.native="setFocusOn(0)">
+        <box>
           <h2>Jeg er allerede bruger på flowr.dk</h2>
           <cta-button type="facebook" to="#">
             Log på med Facebook
           </cta-button>
           <div class="Bruger-or"><span>eller</span></div>
           <label for="user-email">E-mail</label>
-          <input type="text" id="user-email" ref="user-email" placeholder="din@mail.dk" v-model="userEmail" />
+          <input type="email" id="user-email" ref="user-email" placeholder="din@mail.dk" v-model="userEmail" />
           <label for="user-password">Kodeord</label>
-          <input type="text" id="user-password" ref="user-password" placeholder="******" v-model="userPassword" />
+          <input type="password" id="user-password" ref="user-password" placeholder="******" v-model="userPassword" />
           <p>
             <cta-button type="primary" to="#" :inactive="(!userEmail || !userPassword)">
               Log på
@@ -22,21 +22,10 @@
         </box>
       </column>
       <column width="4">
-        <box :focus="boxFocus === 1" @click.native="setFocusOn(1)">
-          <h2>Jeg er ny bruger</h2>
-          <label for="name">Navn *</label>
-          <input type="text" id="name" ref="name" placeholder="Dit Fulde Navn" :value="order.name" @input="updateName" />
-          <label for="email">E-mail *</label>
-          <input type="text" id="email" ref="email" placeholder="din@mail.dk" :value="order.email" @input="updateEmail" />
-          <p class="description">Bruges til at sende ordrebekræftigelse. Du bliver ikke automatisk tilmeldt nogen form for nyhedsbrev.</p>
-          <label for="phone">Mobilnummer</label>
-          <input type="text" id="phone" ref="phone" placeholder="12 34 56 78" :value="order.phone" @input="updatePhone" />
-          <p class="description">Bruges til at opdatere dig på leveringen. Vi sender dig ikke reklame eller videregiver dit nummer.</p>
-          <p>
-            <cta-button type="primary" :to="nextStep.path" :inactive="!step.valid">
-              Videre til {{nextStep.title}}
-            </cta-button>
-          </p>
+        <box class="Bruger-center">
+          <cta-button type="primary" :to="nextStep.path">
+            Jeg er ny bruger
+          </cta-button>
         </box>
       </column>
       <column width="2" />
@@ -60,7 +49,6 @@ export default {
   },
   data() {
     return {
-      boxFocus: 1,
       userEmail: '',
       userPassword: '',
     };
@@ -69,34 +57,18 @@ export default {
     ...mapState({
       order: state => state.order,
       step: state => state.steps[0],
-      nextStep: state => state.steps.find((step, i) => ((i !== 0 && !step.valid) || i === 4)),
+      nextStep: state => state.steps.find((step, i) => ((i !== 0 && !step.valid) || i === 3)),
     }),
-  },
-  methods: {
-    setFocusOn(number) {
-      this.boxFocus = number;
-    },
-    updateName(e) {
-      this.$store.dispatch('updateOrder', { name: e.target.value });
-    },
-    updateEmail(e) {
-      this.$store.dispatch('updateOrder', { email: e.target.value });
-    },
-    updatePhone(e) {
-      this.$store.dispatch('updateOrder', { phone: e.target.value });
-    },
-  },
-  mounted() {
-    const refs = [this.$refs.name, this.$refs.email, this.$refs.phone];
-    const nextInput = refs.find(ref => ref.value === '');
-    if (nextInput) {
-      nextInput.focus();
-    }
   },
 };
 </script>
 
 <style>
+  .Bruger-center {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
   .Bruger-or {
     text-align: center;
     border-bottom: 1px solid var(--color-grey-light);
