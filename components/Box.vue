@@ -44,6 +44,16 @@
     font-weight: 700;
     margin-bottom: 0.5rem;
   }
+  .Box p img {
+    display: inline-block;
+    vertical-align: middle;
+    height: 1.6rem;
+  }
+  .Box p.error {
+    font-size: 0.8125rem;
+    color: red;
+    margin: 0.25rem 0 0;
+  }
   .Box label {
     display: block;
     width: 100%;

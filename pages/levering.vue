@@ -51,7 +51,7 @@
           </div>
           <h3>Modtag SMS om levering</h3>
           <label for="phone">Mobilnummer</label>
-          <input type="tel" id="phone" ref="phone" placeholder="12 34 56 78" :value="order.delivery.phone" @input="updatePhone" />
+          <input type="tel" id="phone" ref="phone" placeholder="12 34 56 78" :value="user.phone" @input="updatePhone" />
           <p class="description">Vi sender en sms aftenen inden med et mere præcist leveringsinterval på 4 timer samt en sms når buketten er leveret.</p>
         </box>
       </column>
@@ -137,6 +137,7 @@ export default {
   computed: {
     ...mapState({
       order: state => state.order,
+      user: state => state.user,
       step: state => state.steps[1],
       nextStep: state => state.steps.find((step, i) => ((i !== 1 && !step.valid) || i === 3)),
     }),
@@ -170,7 +171,7 @@ export default {
       this.$store.dispatch('updateDelivery', { card: e.target.value });
     },
     updatePhone(e) {
-      this.$store.dispatch('updateDelivery', { phone: e.target.value });
+      this.$store.dispatch('updateUser', { phone: e.target.value });
     },
     focusOnInvalidField() {
       const refs = [

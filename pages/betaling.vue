@@ -2,18 +2,11 @@
   <div>
     <h1>Betaling</h1>
     <row>
-      <column width="2" />
       <column width="4">
-        <box fit="true">
-          <h2>Modtag ordrebekræftigelse på</h2>
-          <label for="email">E-mail *</label>
-          <input type="text" id="email" ref="email" placeholder="din@mail.dk" :value="order.invoice.email" @input="updateEmail" />
-          <p class="description">Bruges til at sende ordrebekræftigelse. Du bliver ikke automatisk tilmeldt nogen form for nyhedsbrev.</p>
-        </box>
-        <box fit="true">
+        <box>
           <h2>Adresse til fakturering <a href="#" @click.prevent="copyDelivery">kopier leveringsadresse</a></h2>
           <label for="name">Navn *</label>
-          <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="order.invoice.name" @input="updateName" />
+          <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="user.name" @input="updateName" />
           <row :style="{ padding: 0, margin: '-0.5rem' }">
             <column width="9">
               <label for="street">Vej *</label>
@@ -40,7 +33,7 @@
         </box>
       </column>
       <column width="4">
-        <box fit="true">
+        <box>
           <h2>Betalingsmetode</h2>
           <div class="Betaling-payment-option">
             <input
@@ -92,6 +85,8 @@
             OBS: Luk ikke denne side! Lukkes siden før tid, kan der opstå fejl. Vent og du føres automatisk videre til din kvittering.</div>
           </div>
         </box>
+      </column>
+      <column width="4">
         <box fit="true">
           <h2>Rabatkode eller gavekort</h2>
           <row :style="{ padding: 0, margin: '-0.5rem' }">
@@ -139,7 +134,6 @@
           </row>
         </box>
       </column>
-      <column width="2" />
     </row>
     <row>
       <column width="4" />
@@ -193,7 +187,8 @@ export default {
   computed: {
     ...mapState({
       order: state => state.order,
-      step: state => state.steps[1],
+      user: state => state.user,
+      step: state => state.steps[2],
       nextStep: state => state.steps.find((step, i) => ((i !== 2 && !step.valid) || i === 3)),
     }),
     selectedProduct() {
@@ -201,12 +196,6 @@ export default {
     },
   },
   methods: {
-    setFocusOn(number) {
-      this.boxFocus = number;
-    },
-    updateEmail(e) {
-      this.$store.dispatch('updateInvoice', { email: e.target.value });
-    },
     updateName(e) {
       this.$store.dispatch('updateInvoice', { name: e.target.value });
     },
@@ -239,7 +228,6 @@ export default {
     },
     focusOnInvalidField() {
       const refs = [
-        this.$refs.email,
         this.$refs.name,
         this.$refs.street,
         this.$refs.number,

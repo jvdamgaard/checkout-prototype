@@ -17,6 +17,8 @@ module.exports = {
   ** Customize the progress-bar color
   */
   loading: { color: '#5F306A' },
+  css: ['~assets/css/main.css'],
+  vendor: ['axios'],
   /*
   ** Build configuration
   */

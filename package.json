@@ -5,6 +5,7 @@
   "author": "Jakob Viskum Damgaard <jakob.viskum.damgaard@gmail.com>",
   "private": true,
   "dependencies": {
+    "axios": "^0.16.1",
     "nuxt": "latest",
     "places.js": "^1.4.12",
     "vuejs-datepicker": "^0.7.7"

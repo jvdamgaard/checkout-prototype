@@ -6,11 +6,14 @@
         <h1 :style="{ 'text-align': 'left' }">Bekræft</h1>
       </column>
       <column width="3">
-        <cta-button type="primary" :to="nextStep.path" :inactive="!step.valid" :style="{
+        <cta-button v-if="step.valid" type="primary" to="/kvittering/" :style="{
           'line-height': '3rem',
           'margin-top': '1rem'
         }">
           Afsend bestilling og betal
+        </cta-button>
+        <cta-button v-if="!step.valid" type="primary" :to="nextStep.path">
+          Udfyld {{nextStep.title}}
         </cta-button>
       </column>
       <column width="2" />
@@ -41,33 +44,39 @@
       </column>
       <column width="4">
         <box fit="true">
-          <h2>Fakturering <nuxt-link to="/fakturering/">rediger</nuxt-link></h2>
-          <p>
-            {{order.invoice.name}}<br />
-            {{order.invoice.street}} {{order.invoice.number}}<br />
-            <template v-if="order.invoice.extra">
-              {{order.invoice.extra}}<br />
-            </template>
-            {{order.invoice.zip}} {{order.invoice.city}}
-          </p>
-          <p>
-            {{order.email}}
-          </p>
           <h2>Levering <nuxt-link to="/levering/">rediger</nuxt-link></h2>
-          <p>
-            {{order.delivery.date}} kl. {{deliveryTime}}
-          </p>
+          <p v-if="!steps[1].valid" class="error">Mangler at blive udfyldt. <nuxt-link to="/levering/">Rediger levering</nuxt-link> før du kan købe.</p>
           <p>
             {{order.delivery.name}}<br />
             {{order.delivery.street}} {{order.delivery.number}}<br />
             <template v-if="order.delivery.extra">
               {{order.delivery.extra}}<br />
             </template>
-            {{order.delivery.zip}} {{order.delivery.city}}
+            {{order.delivery.zip}} {{order.delivery.city}}<br />
+            <em>{{order.delivery.date}} kl. {{deliveryTime}}</em>
           </p>
-          <h3>Betaling</h3>
+          <h3>Kort</h3>
           <p class="description">
             {{order.delivery.card}}
+          </p>
+          <h2>Betaling <nuxt-link to="/betaling/">rediger</nuxt-link></h2>
+          <p v-if="!steps[2].valid" class="error">Mangler at blive udfyldt. <nuxt-link to="/betaling/">Rediger betaling</nuxt-link> før du kan købe.</p>
+          <p>
+            {{user.name}}<br />
+            {{order.invoice.street}} {{order.invoice.number}}<br />
+            <template v-if="order.invoice.extra">
+              {{order.invoice.extra}}<br />
+            </template>
+            {{order.invoice.zip}} {{order.invoice.city}}<br />
+            <em>{{user.email}}</em>
+          </p>
+          <h3>Betalingsmetode</h3>
+          <p>
+            <img src="/images/visa.png">
+            {{order.payment.details.number.substring(0,4)}}
+            {{order.payment.details.number.substring(4,6)}}**
+            ****
+            {{order.payment.details.number.substring(12,16)}}
           </p>
         </box>
         <box fit="true">
@@ -115,8 +124,11 @@
               <h2>{{selectedProduct.price}},-</h2>
             </column>
           </row>
-          <cta-button type="primary" style="margin-top: 1rem" :to="nextStep.path" :inactive="!step.valid">
+          <cta-button v-if="step.valid" type="primary" style="margin-top: 1rem" to="/kvittering/">
             Afsend bestilling og betal
+          </cta-button>
+          <cta-button v-if="!step.valid" type="primary" style="margin-top: 1rem" :to="nextStep.path">
+            Udfyld {{nextStep.title}}
           </cta-button>
         </box>
       </column>
@@ -142,7 +154,9 @@ export default {
   computed: {
     ...mapState({
       order: state => state.order,
-      step: state => state.steps[0],
+      user: state => state.user,
+      step: state => state.steps[3],
+      steps: state => state.steps,
       nextStep: state => state.steps.find((step, i) => ((i !== 3 && !step.valid) || i === 3)),
     }),
     deliveryTime() {

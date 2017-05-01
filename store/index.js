@@ -1,4 +1,11 @@
+import axios from 'axios';
+
 export const state = {
+  user: {
+    name: null,
+    email: null,
+    invoiceAddresses: [],
+  },
   order: {
     invoice: {
       name: null,
@@ -7,7 +14,6 @@ export const state = {
       extra: null,
       zip: null,
       city: null,
-      email: null,
     },
     payment: {
       type: 'card',
@@ -55,12 +61,8 @@ export const state = {
   steps: [{
     title: 'Bruger',
     path: '/bruger/',
-    valid: true,
+    valid: false,
   }, {
-  //   title: 'Fakturering',
-  //   path: '/fakturering/',
-  //   valid: false,
-  // }, {
     title: 'Levering',
     path: '/levering/',
     valid: false,
@@ -77,6 +79,10 @@ export const state = {
 
 export const mutations = {
   checkValidation(s) {
+    s.steps[0].valid = (
+      !!s.user.email && // should be set
+      !!s.user.name // should be set
+    );
     s.steps[1].valid = (
       !!s.order.delivery.name && // should be set
       !!s.order.delivery.street && // should be set
@@ -86,31 +92,53 @@ export const mutations = {
       !!s.order.delivery.date // should be set
     );
     s.steps[2].valid = (
-      !!s.order.invoice.email && // should be set
       !!s.order.invoice.name && // should be set
       !!s.order.invoice.street && // should be set
       !!s.order.invoice.zip && // should be set
-      !!s.order.invoice.city // should be set
+      !!s.order.invoice.city && // should be set
+      !!s.order.payment.details.number && // should be set
+      !!s.order.payment.details.month && // should be set
+      !!s.order.payment.details.year && // should be set
+      !!s.order.payment.details.cvc // should be set
     );
     s.steps[3].valid = (
       !!s.steps[1].valid && // should be set
       !!s.steps[2].valid // should be set
     );
   },
-  updateName(s, val) {
-    if (s.order.name === s.order.invoice.name) {
+  updateUserName(s, val) {
+    if (s.user.name === s.order.invoice.name) {
       s.order.invoice.name = val;
     }
-    s.order.name = val;
+    s.user.name = val;
   },
-  updateInvoiceEmail(s, val) { s.order.invoice.email = val; },
-  updateInvoiceName(s, val) { s.order.invoice.name = val; },
+  updateUserEmail(s, val) { s.user.email = val; },
+  updateUserPhone(s, val) { s.user.phone = val; },
+  updateUserInvoiceAddresses(s, val) {
+    s.user.invoiceAddresses.push({
+      ...val,
+      name: val.name || s.user.name,
+      selected: val.selected || false,
+    });
+  },
+
+  updateInvoiceName(s, val) {
+    if (s.user.name === s.order.invoice.name) {
+      s.user.name = val;
+    }
+    s.order.invoice.name = val;
+  },
   updateInvoiceStreet(s, val) { s.order.invoice.street = val; },
   updateInvoiceNumber(s, val) { s.order.invoice.number = val; },
   updateInvoiceExtra(s, val) { s.order.invoice.extra = val; },
   updateInvoiceZip(s, val) { s.order.invoice.zip = val; },
   updateInvoiceCity(s, val) { s.order.invoice.city = val; },
+
   updatePaymentNumber(s, val) { s.order.payment.details.number = val; },
+  updatePaymentMonth(s, val) { s.order.payment.details.month = val; },
+  updatePaymentYear(s, val) { s.order.payment.details.year = val; },
+  updatePaymentCvc(s, val) { s.order.payment.details.cvc = val; },
+
   updateDeliveryName(s, val) { s.order.delivery.name = val; },
   updateDeliveryStreet(s, val) { s.order.delivery.street = val; },
   updateDeliveryNumber(s, val) { s.order.delivery.number = val; },
@@ -125,7 +153,7 @@ export const mutations = {
       selected: (time.value === val),
     }));
   },
-  updateDeliveryPhone(s, val) { s.order.delivery.phone = val; },
+
   updateProduct(s, size) {
     s.order.products = s.order.products.map(product => ({
       ...product,
@@ -135,21 +163,48 @@ export const mutations = {
 };
 
 export const actions = {
-  updateInvoice({ commit }, { name, street, number, extra, zip, city, email }) {
+  updateUser({ commit }, { name, phone, email }) {
+    if (name !== undefined) { commit('updateUserName', name); }
+    if (phone !== undefined) {
+      commit('updateUserPhone', phone);
+      if (phone.length === 8) {
+        axios
+          .get(`https://www.bilka.dk/lookup/addressforphonenumber/${phone}`)
+          .then((response) => {
+            if (response.status === 200) {
+              commit('updateUserInvoiceAddresses', {
+                description: 'Fundet på baggrund af dit telefonnummer.',
+                selected: true,
+                city: response.data.town,
+                zip: response.data.zipcode,
+                street: response.data.address.substring(0, response.data.address.lastIndexOf(' ')),
+                number: response.data.address.split(' ').splice(-1)[0],
+              });
+            }
+          })
+          .catch(() => {});
+      }
+    }
+    if (email !== undefined) { commit('updateUserEmail', email); }
+    commit('checkValidation');
+  },
+  updateInvoice({ commit }, { street, number, extra, zip, city, name }) {
     if (name !== undefined) { commit('updateInvoiceName', name); }
     if (street !== undefined) { commit('updateInvoiceStreet', street); }
     if (number !== undefined) { commit('updateInvoiceNumber', number); }
     if (extra !== undefined) { commit('updateInvoiceExtra', extra); }
     if (zip !== undefined) { commit('updateInvoiceZip', zip); }
     if (city !== undefined) { commit('updateInvoiceCity', city); }
-    if (email !== undefined) { commit('updateInvoiceEmail', email); }
     commit('checkValidation');
   },
-  updatePayment({ commit }, { number }) {
+  updatePayment({ commit }, { number, month, year, cvc }) {
     if (number !== undefined) { commit('updatePaymentNumber', number); }
+    if (month !== undefined) { commit('updatePaymentMonth', month); }
+    if (year !== undefined) { commit('updatePaymentYear', year); }
+    if (cvc !== undefined) { commit('updatePaymentCvc', cvc); }
     commit('checkValidation');
   },
-  updateDelivery({ commit }, { name, street, number, extra, zip, city, date, time, card, phone }) {
+  updateDelivery({ commit }, { name, street, number, extra, zip, city, date, time, card }) {
     if (name !== undefined) { commit('updateDeliveryName', name); }
     if (street !== undefined) { commit('updateDeliveryStreet', street); }
     if (number !== undefined) { commit('updateDeliveryNumber', number); }
@@ -159,7 +214,6 @@ export const actions = {
     if (date !== undefined) { commit('updateDeliveryDate', date); }
     if (time !== undefined) { commit('updateDeliveryTime', time); }
     if (card !== undefined) { commit('updateDeliveryCard', card); }
-    if (phone !== undefined) { commit('updateDeliveryPhone', phone); }
     commit('checkValidation');
   },
   updateProduct({ commit }, { size }) {
