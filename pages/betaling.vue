@@ -43,7 +43,7 @@
               value="card"
               :checked="true"
             />
-            <label for="payment-method_card" >Betalingskort <img src="/images/dankort.png"><img src="/images/visa.png"><img src="/images/mastercard.png"></label>
+            <label for="payment-method_card" >Betalingskort <img src="https://jvdamgaard.github.io/checkout-prototype/images/dankort.png"><img src="https://jvdamgaard.github.io/checkout-prototype/images/visa.png"><img src="https://jvdamgaard.github.io/checkout-prototype/images/mastercard.png"></label>
             <div class="Betaling-payment-option-price">0,-</div>
             <div class="Betaling-payment-option-description description">Vi accepterer Dankort, Visa/Dankort, Visa, Visa Electron og MasterCard.</div>
           </div>
@@ -51,7 +51,7 @@
               'Betaling-card--show-icon': order.payment.details.number.length > 3,
               'Betaling-card--show-brand': order.payment.details.number.length > 5,
             }">
-            <h2>Nordea <img :src="`/images/visa${(order.payment.details.number.length < 6) ? '' : '-negative'}.svg`" /></h2>
+            <h2>Nordea <img :src="`https://jvdamgaard.github.io/checkout-prototype/images/visa${(order.payment.details.number.length < 6) ? '' : '-negative'}.svg`" /></h2>
             <label for="card">Kortnummer *</label>
             <input type="text" id="card" ref="card" placeholder="xxxx xxxx xxxx xxxx" minLength="16" maxLength="16" required :value="order.payment.details.number" @input="updateCardNumber" />
             <row :style="{ padding: 0, margin: '-0.5rem' }">
@@ -79,7 +79,7 @@
               value="mobilepay"
               :checked="false"
             />
-            <label for="payment-method_card" >MobilePay <img src="/images/mobilepay.png"></label>
+            <label for="payment-method_card" >MobilePay <img src="https://jvdamgaard.github.io/checkout-prototype/images/mobilepay.png"></label>
             <div class="Betaling-payment-option-price">0,-</div>
             <div class="Betaling-payment-option-description description">Du videreføres til side fra MobilePay efter du har bekræftiget købet.<br />
             OBS: Luk ikke denne side! Lukkes siden før tid, kan der opstå fejl. Vent og du føres automatisk videre til din kvittering.</div>

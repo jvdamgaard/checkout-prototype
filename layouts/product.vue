@@ -2,7 +2,7 @@
   <div>
     <row class="Product-layout-top-bar">
       <column width="12">
-        <nuxt-link to="/"><img src="/images/logo.svg" class="Navigation-logo"/></nuxt-link>
+        <nuxt-link to="/"><img src="https://jvdamgaard.github.io/checkout-prototype/images/logo.svg" class="Navigation-logo"/></nuxt-link>
       </column>
     </row>
     <nuxt/>

@@ -2,13 +2,13 @@
   <div class="Footer">
     <div class="Footer-row Footer-usp">
       <div class="Footer-column">
-        <img src="/images/gurantee.svg"> 5 dages friskhedsgaranti
+        <img src="https://jvdamgaard.github.io/checkout-prototype/images/gurantee.svg"> 5 dages friskhedsgaranti
       </div>
       <div class="Footer-column">
-        <img src="/images/delivery.svg"> Altid gratis levering, gaveæske og kort
+        <img src="https://jvdamgaard.github.io/checkout-prototype/images/delivery.svg"> Altid gratis levering, gaveæske og kort
       </div>
       <div class="Footer-column">
-        <img src="/images/flower.svg"> Den buket du ser = den buket du giver
+        <img src="https://jvdamgaard.github.io/checkout-prototype/images/flower.svg"> Den buket du ser = den buket du giver
       </div>
     </div>
     <div class="Footer-row">
@@ -22,10 +22,10 @@
       <div class="Footer-column Footer-payment">
         <p class="Footer-header">Betalingsmuligheder</p>
         <p>
-          <img src="/images/dankort.png">
-          <img src="/images/visa.png">
-          <img src="/images/mastercard.png">
-          <img src="/images/mobilepay.png">
+          <img src="https://jvdamgaard.github.io/checkout-prototype/images/dankort.png">
+          <img src="https://jvdamgaard.github.io/checkout-prototype/images/visa.png">
+          <img src="https://jvdamgaard.github.io/checkout-prototype/images/mastercard.png">
+          <img src="https://jvdamgaard.github.io/checkout-prototype/images/mobilepay.png">
         </p>
       </div>
       <div class="Footer-column">

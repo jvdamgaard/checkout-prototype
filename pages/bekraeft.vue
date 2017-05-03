@@ -72,7 +72,7 @@
           </p>
           <h3>Betalingsmetode</h3>
           <p>
-            <img src="/images/visa.png">
+            <img src="https://jvdamgaard.github.io/checkout-prototype/images/visa.png">
             {{order.payment.details.number.substring(0,4)}}
             {{order.payment.details.number.substring(4,6)}}**
             ****

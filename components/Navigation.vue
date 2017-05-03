@@ -1,10 +1,10 @@
 <template>
   <div class="Navigation">
     <div class="Navigation-column">
-      <nuxt-link to="/"><img src="/images/logo.svg" class="Navigation-logo"/></nuxt-link>
+      <nuxt-link to="/"><img src="https://jvdamgaard.github.io/checkout-prototype/images/logo.svg" class="Navigation-logo"/></nuxt-link>
     </div>
     <div class="Navigation-column Navigation-security">
-      <img src="/images/lock.svg"/> 100% sikker betaling
+      <img src="https://jvdamgaard.github.io/checkout-prototype/images/lock.svg"/> 100% sikker betaling
     </div>
   </div>
 </template>
