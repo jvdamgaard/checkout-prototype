@@ -19,6 +19,10 @@ module.exports = {
   loading: { color: '#5F306A' },
   css: ['~assets/css/main.css'],
   vendor: ['axios'],
+
+  router: {
+    base: (process.env.NODE_ENV !== 'generate') ? '/checkout-prototype/' : '/',
+  },
   /*
   ** Build configuration
   */
