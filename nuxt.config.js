@@ -21,7 +21,7 @@ module.exports = {
   vendor: ['axios'],
 
   router: {
-    base: (process.env.NODE_ENV !== 'generate') ? '/checkout-prototype/' : '/',
+    base: (process.env.NODE_ENV === 'generate') ? '/checkout-prototype/' : '/',
   },
   /*
   ** Build configuration
