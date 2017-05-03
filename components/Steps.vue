@@ -24,6 +24,6 @@ export default {
     flex-wrap: wrap;
     margin: -1rem 0;
     padding: 1rem 4rem;
-    background: center repeat-x url(/images/line.svg);
+    background: center repeat-x url(https://jvdamgaard.github.io/checkout-prototype/images/line.svg);
   }
 </style>
