@@ -3,7 +3,28 @@
     <h1>Levering</h1>
     <row>
       <column width="4">
-        <box>
+        <box fit="true">
+          <h2>Find adresse ud fra telefonnummer</h2>
+          <row :style="{ padding: 0, margin: '-0.5rem' }">
+            <column width="8">
+              <input type="tel" id="deliveryPhone" ref="deliveryPhone" placeholder="12 34 56 78" v-model="deliveryAddressPhone"/>
+            </column>
+            <column width="4">
+              <div @click.stop="getDeliveryAddressFromPhone">
+                <cta-button to="#" :style="{
+                  'margin-top': '0.25rem',
+                  'line-height': '1.6rem',
+                  'padding-top': '0.75rem',
+                  'padding-bottom': '0.75rem',
+                }">
+                  Hent
+                </cta-button>
+              </div>
+            </column>
+          </row>
+          <p v-if="deliveryPhoneError" class="error">Vi kunne desværre ikke finde en adresse ud fra det indtastede telefonnummer.</p>
+        </box>
+        <box fit="true">
           <h2>Leveringsadresse</h2>
           <label for="name">Navn *</label>
           <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="order.delivery.name" @input="updateName" />
@@ -88,6 +109,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapState } from 'vuex';
 import Row from '../components/Row.vue';
 import Column from '../components/Column.vue';
@@ -132,6 +154,8 @@ export default {
     return {
       fromDate: formatDate(fromDate),
       toDate: formatDate(toDate),
+      deliveryAddressPhone: '',
+      deliveryPhoneError: false,
     };
   },
   computed: {
@@ -185,6 +209,27 @@ export default {
       if (nextInput) {
         nextInput.focus();
       }
+    },
+    getDeliveryAddressFromPhone() {
+      axios
+        .get(`https://www.bilka.dk/lookup/addressforphonenumber/${this.deliveryAddressPhone}`)
+        .then((response) => {
+          if (response.status === 200) {
+            this.deliveryPhoneError = false;
+            this.$store.dispatch('updateDelivery', {
+              city: response.data.town,
+              zip: response.data.zipcode,
+              street: response.data.address.substring(0, response.data.address.lastIndexOf(' ')),
+              number: response.data.address.split(' ').splice(-1)[0],
+            });
+            this.focusOnInvalidField();
+          } else {
+            this.deliveryPhoneError = true;
+          }
+        })
+        .catch(() => {
+          this.deliveryPhoneError = true;
+        });
     },
   },
   mounted() {

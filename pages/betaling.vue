@@ -90,10 +90,10 @@
         <box fit="true">
           <h2>Rabatkode eller gavekort</h2>
           <row :style="{ padding: 0, margin: '-0.5rem' }">
-            <column width="6">
+            <column width="8">
               <input type="text" id="voucher" ref="voucher" :value="order.delivery.voucher" />
             </column>
-            <column width="6">
+            <column width="4">
               <cta-button to="#" :style="{
                 'margin-top': '0.25rem',
                 'line-height': '1.6rem',

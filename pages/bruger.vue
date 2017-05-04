@@ -103,16 +103,24 @@ export default {
     flex-direction: column;
   }
   .Bruger-or {
-    text-align: center;
-    border-bottom: 1px solid var(--color-grey-light);
-    margin: 4rem -2rem;
     position: relative;
+    text-align: center;
+    margin: 4rem -2rem;
+    z-index: 1;
+  }
+  .Bruger-or:after {
+    content: '';
+    position: absolute;
+    border-top: 1px solid var(--color-grey-light);
+    width: 100%;
+    left: 0;
+    top: 50%;
+    z-index: -1;
   }
   .Bruger-or span {
-    display: block;
-    position: absolute;
-    margin: -0.75rem 42%;
+    display: inline-block;
     background-color: var(--color-white);
     padding: 0 2rem;
+    z-index: 2;
   }
 </style>

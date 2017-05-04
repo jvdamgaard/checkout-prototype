@@ -24,6 +24,16 @@ export default {
     flex-wrap: wrap;
     margin: -1rem 0;
     padding: 1rem 4rem;
-    background: center repeat-x url(https://jvdamgaard.github.io/checkout-prototype/images/line.svg);
+    z-index: 1;
+    position: relative;
+  }
+  .Steps:after {
+    content: '';
+    position: absolute;
+    border-top: 1px solid var(--color-grey);
+    width: 100%;
+    left: 0;
+    top: 50%;
+    z-index: -1;
   }
 </style>

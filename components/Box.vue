@@ -52,7 +52,7 @@
   .Box p.error {
     font-size: 0.8125rem;
     color: red;
-    margin: 0.25rem 0 0;
+    margin: 1rem 0 0;
   }
   .Box label {
     display: block;
