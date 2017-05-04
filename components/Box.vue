@@ -52,7 +52,7 @@
   .Box p.error {
     font-size: 0.8125rem;
     color: red;
-    margin: 1rem 0 0;
+    margin: 0.25rem 0 0;
   }
   .Box label {
     display: block;
@@ -83,6 +83,11 @@
     display: inline-block;
     width: auto;
     margin: 0 1rem 0.5rem 0;
+  }
+  .Box input[type=checkbox], .Box input[type=checkbox] + label {
+    display: inline-block;
+    width: auto;
+    margin: 1rem 1rem 0.5rem 0;
   }
   .Box input.inline {
     display: inline-block;

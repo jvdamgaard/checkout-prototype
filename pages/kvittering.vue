@@ -71,11 +71,17 @@
             <column width="6" style="text-align:right">
               0,-
             </column>
+            <column v-if="order.payment.voucher.savings > 0" width="6" style="color: red">
+              Rabat ({{order.payment.voucher.title}} - {{order.payment.voucher.savings * 100}}%)
+            </column>
+            <column v-if="order.payment.voucher.savings > 0" width="6" style="text-align:right; color: red">
+              - {{order.payment.voucher.savings * selectedProduct.price}},-
+            </column>
             <column width="6">
               <h2>Total</h2>
             </column>
             <column width="6" style="text-align:right">
-              <h2>{{selectedProduct.price}},-</h2>
+              <h2>{{selectedProduct.price - (order.payment.voucher.savings * selectedProduct.price)}},-</h2>
             </column>
           </row>
         </box>
@@ -100,6 +106,8 @@
           <input type="email" id="user-email" ref="user-email" v-model="userEmail" />
           <label for="user-password">Kodeord</label>
           <input type="password" id="user-password" ref="user-password" placeholder="******" v-model="userPassword" />
+          <input type="checkbox" name="remember" :checked="true" />
+          <label for="remember">Husk mig</label>
           <p>
             <cta-button type="primary" to="#" :inactive="(!userEmail || !userPassword)">
               Opret bruger

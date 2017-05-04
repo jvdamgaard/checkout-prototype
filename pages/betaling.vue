@@ -4,7 +4,7 @@
     <row>
       <column width="4">
         <box>
-          <h2>Adresse til fakturering <a href="#" @click.prevent="copyDelivery">kopier leveringsadresse</a></h2>
+          <h2>Faktureringsadresse <a href="#" @click.prevent="copyDelivery">kopier leveringsadresse</a></h2>
           <label for="name">Navn *</label>
           <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="user.name" @input="updateName" />
           <row :style="{ padding: 0, margin: '-0.5rem' }">
@@ -87,21 +87,23 @@
         </box>
       </column>
       <column width="4">
-        <box fit="true">
+        <box fit="true" v-if="order.payment.voucher.savings === 0">
           <h2>Rabatkode eller gavekort</h2>
           <row :style="{ padding: 0, margin: '-0.5rem' }">
             <column width="8">
-              <input type="text" id="voucher" ref="voucher" :value="order.delivery.voucher" />
+              <input type="text" id="voucher" ref="voucher" v-model="voucher" />
             </column>
             <column width="4">
-              <cta-button to="#" :style="{
-                'margin-top': '0.25rem',
-                'line-height': '1.6rem',
-                'padding-top': '0.75rem',
-                'padding-bottom': '0.75rem',
-              }">
-                Indløs
-              </cta-button>
+              <div @click.stop="addVoucher">
+                <cta-button to="#" :style="{
+                  'margin-top': '0.25rem',
+                  'line-height': '1.6rem',
+                  'padding-top': '0.75rem',
+                  'padding-bottom': '0.75rem',
+                }">
+                  Indløs
+                </cta-button>
+              </div>
             </column>
           </row>
         </box>
@@ -125,11 +127,17 @@
             <column width="6" style="text-align:right">
               0,-
             </column>
+            <column v-if="order.payment.voucher.savings > 0" width="6" style="color: red">
+              Rabat ({{order.payment.voucher.title}} - {{order.payment.voucher.savings * 100}}%)
+            </column>
+            <column v-if="order.payment.voucher.savings > 0" width="6" style="text-align:right; color: red">
+              - {{order.payment.voucher.savings * selectedProduct.price}},-
+            </column>
             <column width="6">
               <h2>Total</h2>
             </column>
             <column width="6" style="text-align:right">
-              <h2>{{selectedProduct.price}},-</h2>
+              <h2>{{selectedProduct.price - (order.payment.voucher.savings * selectedProduct.price)}},-</h2>
             </column>
           </row>
         </box>
@@ -182,6 +190,7 @@ export default {
   data() {
     return {
       boxFocus: 1,
+      voucher: '',
     };
   },
   computed: {
@@ -226,6 +235,9 @@ export default {
     updateCardCvc(e) {
       this.$store.dispatch('updatePayment', { cvc: e.target.value });
     },
+    addVoucher() {
+      this.$store.dispatch('addVoucher', { title: this.voucher });
+    },
     focusOnInvalidField() {
       const refs = [
         this.$refs.name,
@@ -233,6 +245,10 @@ export default {
         this.$refs.number,
         this.$refs.zip,
         this.$refs.city,
+        this.$refs.card,
+        this.$refs.month,
+        this.$refs.year,
+        this.$refs.cvc,
       ];
       const nextInput = refs.find(ref => ref.value === '');
       if (nextInput) {
@@ -240,7 +256,14 @@ export default {
       }
     },
     copyDelivery() {
-      this.$store.dispatch('updateInvoice', this.order.delivery);
+      this.$store.dispatch('updateInvoice', {
+        street: this.order.delivery.street,
+        number: this.order.delivery.number,
+        extra: this.order.delivery.extra,
+        zip: this.order.delivery.zip,
+        city: this.order.delivery.city,
+      });
+      this.focusOnInvalidField();
     },
   },
   mounted() {

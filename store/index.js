@@ -23,6 +23,10 @@ export const state = {
         year: '',
         cvc: '',
       },
+      voucher: {
+        title: '',
+        savings: 0,
+      },
     },
     delivery: {
       name: null,
@@ -160,6 +164,11 @@ export const mutations = {
       selected: (product.size === size),
     }));
   },
+
+  addVoucher(s, title) {
+    s.order.payment.voucher.title = title;
+    s.order.payment.voucher.savings = 0.1;
+  },
 };
 
 export const actions = {
@@ -218,5 +227,8 @@ export const actions = {
   },
   updateProduct({ commit }, { size }) {
     commit('updateProduct', size);
+  },
+  addVoucher({ commit }, { title }) {
+    commit('addVoucher', title);
   },
 };

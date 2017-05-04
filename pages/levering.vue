@@ -4,8 +4,9 @@
     <row>
       <column width="4">
         <box fit="true">
-          <h2>Find adresse ud fra telefonnummer</h2>
-          <row :style="{ padding: 0, margin: '-0.5rem' }">
+          <h2>Søg leveringsadresse</h2>
+          <label for="deliveryPhone">Telefonnummer</label>
+          <row :style="{ padding: 0, margin: '0 -0.5rem' }">
             <column width="8">
               <input type="tel" id="deliveryPhone" ref="deliveryPhone" placeholder="12 34 56 78" v-model="deliveryAddressPhone"/>
             </column>
@@ -17,12 +18,13 @@
                   'padding-top': '0.75rem',
                   'padding-bottom': '0.75rem',
                 }">
-                  Hent
+                  Søg
                 </cta-button>
               </div>
             </column>
           </row>
           <p v-if="deliveryPhoneError" class="error">Vi kunne desværre ikke finde en adresse ud fra det indtastede telefonnummer.</p>
+          <p v-if="!deliveryPhoneError" class="description">Vi bruger nummeroplysningen til nemt og hurtigt at finde din leveringsadresse.</p>
         </box>
         <box fit="true">
           <h2>Leveringsadresse</h2>
@@ -204,6 +206,7 @@ export default {
         this.$refs.number,
         this.$refs.zip,
         this.$refs.city,
+        this.$refs.date,
       ];
       const nextInput = refs.find(ref => ref.value === '');
       if (nextInput) {

@@ -79,21 +79,23 @@
             {{order.payment.details.number.substring(12,16)}}
           </p>
         </box>
-        <box fit="true">
+        <box fit="true" v-if="order.payment.voucher.savings === 0">
           <h2>Rabatkode eller gavekort</h2>
           <row :style="{ padding: 0, margin: '-0.5rem' }">
             <column width="8">
-              <input type="text" id="voucher" ref="voucher" :value="order.delivery.voucher" />
+              <input type="text" id="voucher" ref="voucher" v-model="voucher" />
             </column>
             <column width="4">
-              <cta-button to="#" :style="{
-                'margin-top': '0.25rem',
-                'line-height': '1.6rem',
-                'padding-top': '0.75rem',
-                'padding-bottom': '0.75rem',
-              }">
-                Indløs
-              </cta-button>
+              <div @click.stop="addVoucher">
+                <cta-button to="#" :style="{
+                  'margin-top': '0.25rem',
+                  'line-height': '1.6rem',
+                  'padding-top': '0.75rem',
+                  'padding-bottom': '0.75rem',
+                }">
+                  Indløs
+                </cta-button>
+              </div>
             </column>
           </row>
         </box>
@@ -117,11 +119,17 @@
             <column width="6" style="text-align:right">
               0,-
             </column>
+            <column v-if="order.payment.voucher.savings > 0" width="6" style="color: red">
+              Rabat ({{order.payment.voucher.title}} - {{order.payment.voucher.savings * 100}}%)
+            </column>
+            <column v-if="order.payment.voucher.savings > 0" width="6" style="text-align:right; color: red">
+              - {{order.payment.voucher.savings * selectedProduct.price}},-
+            </column>
             <column width="6">
               <h2>Total</h2>
             </column>
             <column width="6" style="text-align:right">
-              <h2>{{selectedProduct.price}},-</h2>
+              <h2>{{selectedProduct.price - (order.payment.voucher.savings * selectedProduct.price)}},-</h2>
             </column>
           </row>
           <cta-button v-if="step.valid" type="primary" style="margin-top: 1rem" to="/kvittering/">
@@ -151,6 +159,11 @@ export default {
     Box,
     CtaButton,
   },
+  data() {
+    return {
+      voucher: '',
+    };
+  },
   computed: {
     ...mapState({
       order: state => state.order,
@@ -167,6 +180,9 @@ export default {
     },
   },
   methods: {
+    addVoucher() {
+      this.$store.dispatch('addVoucher', { title: this.voucher });
+    },
     updateProduct(product) {
       this.$store.dispatch('updateProduct', product);
     },

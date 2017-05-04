@@ -14,6 +14,8 @@
           <input type="email" id="user-email" ref="user-email" placeholder="din@mail.dk" v-model="userEmail" />
           <label for="user-password">Kodeord</label>
           <input type="password" id="user-password" ref="user-password" placeholder="******" v-model="userPassword" />
+          <input type="checkbox" name="remember" :checked="true" />
+          <label for="remember">Husk mig</label>
           <p>
             <cta-button type="primary" to="#" :inactive="(!userEmail || !userPassword)">
               Log på
@@ -34,7 +36,7 @@
           <p class="description">Bruges til at opdatere dig på leveringen. Vi sender dig ikke reklame eller videregiver dit nummer.</p>
           <p>
             <cta-button type="primary" :to="nextStep.path" :inactive="!step.valid">
-              Jeg er ny bruger
+              Videre til {{nextStep.title}}
             </cta-button>
           </p>
         </box>
