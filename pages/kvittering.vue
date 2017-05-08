@@ -202,7 +202,7 @@ export default {
   .Kvittering-or {
     position: relative;
     text-align: center;
-    margin: 4rem -2rem;
+    margin: 2rem -2rem;
     z-index: 1;
   }
   .Kvittering-or:after {

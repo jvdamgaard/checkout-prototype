@@ -119,11 +119,17 @@ export const mutations = {
   updateUserEmail(s, val) { s.user.email = val; },
   updateUserPhone(s, val) { s.user.phone = val; },
   updateUserInvoiceAddresses(s, val) {
-    s.user.invoiceAddresses.push({
+    s.user.invoiceAddresses = [{
       ...val,
-      name: val.name || s.user.name,
+      name: val.name || s.user.name || 'Lars Flemming :-)',
       selected: val.selected || false,
-    });
+    }];
+  },
+  updateUserInvoiceAddressesSelection(s, val) {
+    s.user.invoiceAddresses = s.user.invoiceAddresses.map((address, i) => ({
+      ...address,
+      selected: i === val,
+    }));
   },
 
   updateInvoiceName(s, val) {
@@ -230,5 +236,8 @@ export const actions = {
   },
   addVoucher({ commit }, { title }) {
     commit('addVoucher', title);
+  },
+  selectInvoiceAddresses({ commit }, { index }) {
+    commit('updateUserInvoiceAddressesSelection', index);
   },
 };

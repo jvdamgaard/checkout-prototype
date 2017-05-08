@@ -8,7 +8,7 @@
           <label for="deliveryPhone">Telefonnummer</label>
           <row :style="{ padding: 0, margin: '0 -0.5rem' }">
             <column width="8">
-              <input type="tel" id="deliveryPhone" ref="deliveryPhone" placeholder="12 34 56 78" v-model="deliveryAddressPhone"/>
+              <input type="tel" id="deliveryPhone" ref="deliveryPhone" placeholder="12 34 56 78" v-model="deliveryAddressPhone" @keyup.enter="getDeliveryAddressFromPhone"/>
             </column>
             <column width="4">
               <div @click.stop="getDeliveryAddressFromPhone">

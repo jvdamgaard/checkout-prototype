@@ -62,12 +62,12 @@
           <h2>Betaling <nuxt-link to="/betaling/">rediger</nuxt-link></h2>
           <p v-if="!steps[2].valid" class="error">Mangler at blive udfyldt. <nuxt-link to="/betaling/">Rediger betaling</nuxt-link> før du kan købe.</p>
           <p>
-            {{user.name}}<br />
-            {{order.invoice.street}} {{order.invoice.number}}<br />
-            <template v-if="order.invoice.extra">
-              {{order.invoice.extra}}<br />
+            {{selectedInvoiceAddress.name}}<br />
+            {{selectedInvoiceAddress.street}} {{selectedInvoiceAddress.number}}<br />
+            <template v-if="selectedInvoiceAddress.extra">
+              {{selectedInvoiceAddress.extra}}<br />
             </template>
-            {{order.invoice.zip}} {{order.invoice.city}}<br />
+            {{selectedInvoiceAddress.zip}} {{selectedInvoiceAddress.city}}<br />
             <em>{{user.email}}</em>
           </p>
           <h3>Betalingsmetode</h3>
@@ -79,11 +79,11 @@
             {{order.payment.details.number.substring(12,16)}}
           </p>
         </box>
-        <box fit="true" v-if="order.payment.voucher.savings === 0">
+        <box fit="true">
           <h2>Rabatkode eller gavekort</h2>
           <row :style="{ padding: 0, margin: '-0.5rem' }">
             <column width="8">
-              <input type="text" id="voucher" ref="voucher" v-model="voucher" />
+              <input type="text" id="voucher" ref="voucher" v-model="voucher" @keyup.enter="addVoucher" />
             </column>
             <column width="4">
               <div @click.stop="addVoucher">
@@ -102,7 +102,7 @@
         <box fit="true" style="background-color: var(--color-grey-light); padding: 2rem">
           <row style="padding: 0; margin: -0.5rem">
             <column width="6">
-              Pris i alt
+              Buket
             </column>
             <column width="6" style="text-align:right">
               {{selectedProduct.price}},-
@@ -114,7 +114,7 @@
               0,-
             </column>
             <column width="6">
-              Kortgebyr
+              Betalingsgebyr
             </column>
             <column width="6" style="text-align:right">
               0,-
@@ -177,6 +177,13 @@ export default {
     },
     selectedProduct() {
       return this.order.products.find(product => product.selected);
+    },
+    selectedInvoiceAddress() {
+      let selectedInvoiceAddress = this.user.invoiceAddresses.find(address => address.selected);
+      if (!selectedInvoiceAddress) {
+        selectedInvoiceAddress = this.order.invoice;
+      }
+      return selectedInvoiceAddress;
     },
   },
   methods: {

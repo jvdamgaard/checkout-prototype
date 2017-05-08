@@ -4,32 +4,68 @@
     <row>
       <column width="4">
         <box>
-          <h2>Faktureringsadresse <a href="#" @click.prevent="copyDelivery">kopier leveringsadresse</a></h2>
-          <label for="name">Navn *</label>
-          <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="user.name" @input="updateName" />
-          <row :style="{ padding: 0, margin: '-0.5rem' }">
-            <column width="9">
-              <label for="street">Vej *</label>
-              <input type="text" id="street" ref="street" placeholder="Dinvej" :value="order.invoice.street" @input="updateStreet" />
-            </column>
-            <column width="3">
-              <label for="number">Nummer *</label>
-              <input type="text" id="number" ref="number" placeholder="20" :value="order.invoice.number" @input="updateNumber" />
-            </column>
-          </row>
-          <label for="extra">Ekstra information til adresse</label>
-          <input type="text" id="extra" ref="extra" placeholder="Min Arbejdsplads" :value="order.invoice.extra" @input="updateExtra" />
-          <p class="description">Eksempelvis firmanavn.</p>
-          <row :style="{ padding: 0, margin: '-0.5rem' }">
-            <column width="4">
-              <label for="zip">Postnummer *</label>
-              <input type="text" id="zip" ref="zip" placeholder="8000" :value="order.invoice.zip" @input="updateZip" />
-            </column>
-            <column width="8">
-              <label for="city">By *</label>
-              <input type="text" id="city" ref="city" placeholder="Aarhus" :value="order.invoice.city" @input="updateCity" />
-            </column>
-          </row>
+          <h2>Faktureringsadresse <a v-if="!selectedAddress" href="#" @click.prevent="copyDelivery">kopier leveringsadresse</a></h2>
+          <template v-if="user.invoiceAddresses.length > 0">
+            <div v-for="(invoiceAddress, index) in user.invoiceAddresses" class="Betaling-invoice-choice" @click="selectAddress({ index })">
+              <input
+                type="radio"
+                name="invoiceAddress"
+                :id="`invoiceAddress-${index}`"
+                :value="index"
+                :checked="invoiceAddress.selected"
+              />
+              <label :for="`invoiceAddress-${index}`">
+                {{invoiceAddress.name}}<br />
+                {{invoiceAddress.street}} {{invoiceAddress.number}}<br />
+                <template v-if="invoiceAddress.extra">
+                  {{invoiceAddress.extra}}<br />
+                </template>
+                {{invoiceAddress.zip}} {{invoiceAddress.city}}
+                <template v-if="invoiceAddress.description">
+                  <br /><span class="description">{{invoiceAddress.description}}</span>
+                </template>
+              </label>
+            </div>
+            <div class="Betaling-invoice-choice" @click="unselectAddress">
+              <input
+                type="radio"
+                name="invoiceAddress"
+                id="invoiceAddress-none"
+                value=""
+                :checked="!selectedAddress"
+              />
+              <label for="invoiceAddress-none">
+                Brug en anden adresse
+              </label>
+            </div>
+          </template>
+          <template v-if="!selectedAddress">
+            <label for="name">Navn *</label>
+            <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="user.name" @input="updateName" />
+            <row :style="{ padding: 0, margin: '-0.5rem' }">
+              <column width="9">
+                <label for="street">Vej *</label>
+                <input type="text" id="street" ref="street" placeholder="Dinvej" :value="order.invoice.street" @input="updateStreet" />
+              </column>
+              <column width="3">
+                <label for="number">Nummer *</label>
+                <input type="text" id="number" ref="number" placeholder="20" :value="order.invoice.number" @input="updateNumber" />
+              </column>
+            </row>
+            <label for="extra">Ekstra information til adresse</label>
+            <input type="text" id="extra" ref="extra" placeholder="Min Arbejdsplads" :value="order.invoice.extra" @input="updateExtra" />
+            <p class="description">Eksempelvis firmanavn.</p>
+            <row :style="{ padding: 0, margin: '-0.5rem' }">
+              <column width="4">
+                <label for="zip">Postnummer *</label>
+                <input type="text" id="zip" ref="zip" placeholder="8000" :value="order.invoice.zip" @input="updateZip" />
+              </column>
+              <column width="8">
+                <label for="city">By *</label>
+                <input type="text" id="city" ref="city" placeholder="Aarhus" :value="order.invoice.city" @input="updateCity" />
+              </column>
+            </row>
+          </template>
         </box>
       </column>
       <column width="4">
@@ -87,11 +123,11 @@
         </box>
       </column>
       <column width="4">
-        <box fit="true" v-if="order.payment.voucher.savings === 0">
+        <box fit="true">
           <h2>Rabatkode eller gavekort</h2>
           <row :style="{ padding: 0, margin: '-0.5rem' }">
             <column width="8">
-              <input type="text" id="voucher" ref="voucher" v-model="voucher" />
+              <input type="text" id="voucher" ref="voucher" v-model="voucher" @keyup.enter="addVoucher" />
             </column>
             <column width="4">
               <div @click.stop="addVoucher">
@@ -110,7 +146,7 @@
         <box fit="true" style="background-color: var(--color-grey-light); padding: 2rem">
           <row style="padding: 0; margin: -0.5rem">
             <column width="6">
-              Pris i alt
+              Buket
             </column>
             <column width="6" style="text-align:right">
               {{selectedProduct.price}},-
@@ -122,7 +158,7 @@
               0,-
             </column>
             <column width="6">
-              Kortgebyr
+              Betalingsgebyr
             </column>
             <column width="6" style="text-align:right">
               0,-
@@ -203,6 +239,9 @@ export default {
     selectedProduct() {
       return this.order.products.find(product => product.selected);
     },
+    selectedAddress() {
+      return this.user.invoiceAddresses.find(address => address.selected);
+    },
   },
   methods: {
     updateName(e) {
@@ -265,6 +304,14 @@ export default {
       });
       this.focusOnInvalidField();
     },
+    unselectAddress() {
+      this.$store.dispatch('selectInvoiceAddresses', { index: null });
+      this.focusOnInvalidField();
+    },
+    selectAddress(address) {
+      this.$store.dispatch('selectInvoiceAddresses', address);
+      this.focusOnInvalidField();
+    },
   },
   mounted() {
     const places = require('places.js'); // eslint-disable-line
@@ -304,16 +351,21 @@ export default {
 </script>
 
 <style>
-  .Betaling-payment-option {
-    margin: 0 -2rem;
+  .Betaling-payment-option, .Betaling-invoice-choice {
+    margin: 0rem -2rem;
     padding: 0.5rem 2rem;
     cursor: pointer;
   }
-  .Betaling-payment-option * {
+  .Betaling-payment-option *, .Betaling-invoice-choice * {
     cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
   }
   .Betaling-payment-option label {
     font-weight: 700;
+    margin-bottom: 0 !important;
+  }
+  .Betaling-invoice-choice label {
     margin-bottom: 0 !important;
   }
   .Betaling-payment-option label img {

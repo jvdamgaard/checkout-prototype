@@ -32,7 +32,7 @@
           <input type="text" id="email" ref="email" placeholder="din@mail.dk" :value="user.email" @input="updateEmail" />
           <p class="description">Bruges til at sende ordrebekræftigelse. Du bliver ikke automatisk tilmeldt nogen form for nyhedsbrev.</p>
           <label for="phone">Mobilnummer</label>
-          <input type="text" id="phone" ref="phone" placeholder="12 34 56 78" :value="user.phone" @input="updatePhone" />
+          <input type="text" id="phone" ref="phone" placeholder="12 34 56 78" :value="user.phone" @blur="updatePhone" />
           <p class="description">Bruges til at opdatere dig på leveringen. Vi sender dig ikke reklame eller videregiver dit nummer.</p>
           <p>
             <cta-button type="primary" :to="nextStep.path" :inactive="!step.valid">
@@ -107,7 +107,7 @@ export default {
   .Bruger-or {
     position: relative;
     text-align: center;
-    margin: 4rem -2rem;
+    margin: 2rem -2rem;
     z-index: 1;
   }
   .Bruger-or:after {
