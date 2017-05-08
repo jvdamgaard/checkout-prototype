@@ -25,7 +25,7 @@
           <div class="Product-price">{{product.price}},-</div>
         </div>
         <p>
-          <cta-button type="primary" to="/velkommen/">
+          <cta-button type="primary" :to="nextStep.path">
             Køb nu
           </cta-button>
         </p>
@@ -55,6 +55,7 @@ export default {
   computed: {
     ...mapState({
       order: state => state.order,
+      nextStep: state => state.steps.find((step, i) => (!step.valid || i === 3)),
     }),
     selectedProduct() {
       return this.order.products.find(product => product.selected);
