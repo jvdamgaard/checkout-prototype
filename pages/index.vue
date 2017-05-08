@@ -25,7 +25,7 @@
           <div class="Product-price">{{product.price}},-</div>
         </div>
         <p>
-          <cta-button type="primary" to="/bruger/">
+          <cta-button type="primary" to="/velkommen/">
             Køb nu
           </cta-button>
         </p>

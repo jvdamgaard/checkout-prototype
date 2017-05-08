@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Bruger</h1>
+    <h1>Velkommen</h1>
     <row>
       <column width="2" />
       <column width="4">

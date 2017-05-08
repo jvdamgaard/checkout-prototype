@@ -3,9 +3,10 @@
     <h1>Levering</h1>
     <row>
       <column width="4">
-        <box fit="true">
-          <h2>Søg leveringsadresse</h2>
-          <label for="deliveryPhone">Telefonnummer</label>
+        <box>
+          <h2>Leveringsadresse</h2>
+          <h3>Søg leveringsadresse</h3>
+          <label for="deliveryPhone">Telefonnummer på modtageren</label>
           <row :style="{ padding: 0, margin: '0 -0.5rem' }">
             <column width="8">
               <input type="tel" id="deliveryPhone" ref="deliveryPhone" placeholder="12 34 56 78" v-model="deliveryAddressPhone" @keyup.enter="getDeliveryAddressFromPhone"/>
@@ -25,9 +26,6 @@
           </row>
           <p v-if="deliveryPhoneError" class="error">Vi kunne desværre ikke finde en adresse ud fra det indtastede telefonnummer.</p>
           <p v-if="!deliveryPhoneError" class="description">Vi bruger nummeroplysningen til nemt og hurtigt at finde din leveringsadresse.</p>
-        </box>
-        <box fit="true">
-          <h2>Leveringsadresse</h2>
           <label for="name">Navn *</label>
           <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="order.delivery.name" @input="updateName" />
           <row :style="{ padding: 0, margin: '-0.5rem' }">

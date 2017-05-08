@@ -63,8 +63,8 @@ export const state = {
     }],
   },
   steps: [{
-    title: 'Bruger',
-    path: '/bruger/',
+    title: 'Velkommen',
+    path: '/velkommen/',
     valid: false,
   }, {
     title: 'Levering',
@@ -96,10 +96,15 @@ export const mutations = {
       !!s.order.delivery.date // should be set
     );
     s.steps[2].valid = (
-      !!s.order.invoice.name && // should be set
-      !!s.order.invoice.street && // should be set
-      !!s.order.invoice.zip && // should be set
-      !!s.order.invoice.city && // should be set
+      (
+        !!s.user.invoiceAddresses.find(address => address.selected) ||
+        (
+          !!s.order.invoice.name && // should be set
+          !!s.order.invoice.street && // should be set
+          !!s.order.invoice.zip && // should be set
+          !!s.order.invoice.city // should be set
+        )
+      ) &&
       !!s.order.payment.details.number && // should be set
       !!s.order.payment.details.month && // should be set
       !!s.order.payment.details.year && // should be set
