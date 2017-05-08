@@ -3,9 +3,27 @@
     <row>
       <column width="2" />
       <column width="8">
-        <h1 :style="{ 'text-align': 'left' }">Kvittering</h1>
+        <h1 :style="{ 'text-align': 'left' }">Tak for din bestilling</h1>
       </column>
       <column width="2" />
+    </row>
+    <row>
+      <column width="2" />
+      <column width="6">
+        <h2 :style="{
+          'margin-bottom': '0'
+        }">Din ordre er oprettet med ordrenummer #12345678</h2>
+        <p :style="{
+          'margin-top': '0',
+          'margin-bottom': '3rem'
+        }">Du vil snart modtage en mail fra info@flowr.dk, der bekræftiger dit køb.</p>
+      </column>
+      <column width="2">
+        <cta-button to="#" :style="{
+          'line-height': '3rem',
+          'margin-top': '1rem'
+        }">Print kvittering</cta-button>
+      </column>
     </row>
     <row>
       <column width="2" />
@@ -34,12 +52,12 @@
           </p>
           <h2>Betaling</h2>
           <p>
-            {{user.name}}<br />
-            {{order.invoice.street}} {{order.invoice.number}}<br />
-            <template v-if="order.invoice.extra">
-              {{order.invoice.extra}}<br />
+            {{selectedInvoiceAddress.name}}<br />
+            {{selectedInvoiceAddress.street}} {{selectedInvoiceAddress.number}}<br />
+            <template v-if="selectedInvoiceAddress.extra">
+              {{selectedInvoiceAddress.extra}}<br />
             </template>
-            {{order.invoice.zip}} {{order.invoice.city}}<br />
+            {{selectedInvoiceAddress.zip}} {{selectedInvoiceAddress.city}}<br />
             <em>{{user.email}}</em>
           </p>
           <h3>Betalingsmetode</h3>
@@ -54,7 +72,7 @@
         <box fit="true" style="background-color: var(--color-grey-light); padding: 2rem">
           <row style="padding: 0; margin: -0.5rem">
             <column width="6">
-              Pris i alt
+              Buket
             </column>
             <column width="6" style="text-align:right">
               {{selectedProduct.price}},-
@@ -66,7 +84,7 @@
               0,-
             </column>
             <column width="6">
-              Kortgebyr
+              Betalingsgebyr
             </column>
             <column width="6" style="text-align:right">
               0,-
@@ -113,6 +131,9 @@
               Opret bruger
             </cta-button>
           </p>
+          <p class="description">
+            Vi gemmer alle dine oplysninger fra dette køb, så du hurtigt og nemt kan købe en buket næste gang.
+          </p>
         </box>
       </column>
       <column width="2" />
@@ -150,6 +171,13 @@ export default {
     },
     selectedProduct() {
       return this.order.products.find(product => product.selected);
+    },
+    selectedInvoiceAddress() {
+      let selectedInvoiceAddress = this.user.invoiceAddresses.find(address => address.selected);
+      if (!selectedInvoiceAddress) {
+        selectedInvoiceAddress = this.order.invoice;
+      }
+      return selectedInvoiceAddress;
     },
     userEmail() {
       return this.user.email;

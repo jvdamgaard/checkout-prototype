@@ -12,7 +12,10 @@
         }">
           Afsend bestilling og betal
         </cta-button>
-        <cta-button v-if="!step.valid" type="primary" :to="nextStep.path">
+        <cta-button v-if="!step.valid" type="primary" :to="nextStep.path" :style="{
+          'line-height': '3rem',
+          'margin-top': '1rem'
+        }">
           Udfyld {{nextStep.title}}
         </cta-button>
       </column>
