@@ -5,52 +5,88 @@
       <column width="4">
         <box>
           <h2>Leveringsadresse</h2>
-          <h3>Søg leveringsadresse</h3>
-          <label for="deliveryPhone">Telefonnummer på modtageren</label>
-          <row :style="{ padding: 0, margin: '0 -0.5rem' }">
-            <column width="8">
-              <input type="tel" id="deliveryPhone" ref="deliveryPhone" placeholder="12 34 56 78" v-model="deliveryAddressPhone" @keyup.enter="getDeliveryAddressFromPhone"/>
-            </column>
-            <column width="4">
-              <div @click.stop="getDeliveryAddressFromPhone">
-                <cta-button to="#" :style="{
-                  'margin-top': '0.25rem',
-                  'line-height': '1.6rem',
-                  'padding-top': '0.75rem',
-                  'padding-bottom': '0.75rem',
-                }">
-                  Søg
-                </cta-button>
-              </div>
-            </column>
-          </row>
-          <p v-if="deliveryPhoneError" class="error">Vi kunne desværre ikke finde en adresse ud fra det indtastede telefonnummer.</p>
-          <p v-if="!deliveryPhoneError" class="description">Vi bruger nummeroplysningen til nemt og hurtigt at finde din leveringsadresse.</p>
-          <label for="name">Navn *</label>
-          <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="order.delivery.name" @input="updateName" />
-          <row :style="{ padding: 0, margin: '-0.5rem' }">
-            <column width="9">
-              <label for="street">Vej *</label>
-              <input type="text" id="street" ref="street" placeholder="Dinvej" :value="order.delivery.street" @input="updateStreet" />
-            </column>
-            <column width="3">
-              <label for="number">Nummer *</label>
-              <input type="text" id="number" ref="number" placeholder="20" :value="order.delivery.number" @input="updateNumber" />
-            </column>
-          </row>
-          <label for="extra">Ekstra information til adresse</label>
-          <input type="text" id="extra" ref="extra" placeholder="Afdeling 3083, stue 7" maxlength="40" :value="order.delivery.extra" @input="updateExtra" />
-          <p class="description">Eksempelvis afdeling og stue på hospital. {{order.delivery.extra ? order.delivery.extra.length : 0}} af 40 tegn brugt.</p>
-          <row :style="{ padding: 0, margin: '-0.5rem' }">
-            <column width="4">
-              <label for="zip">Postnummer *</label>
-              <input type="text" id="zip" ref="zip" placeholder="8000" :value="order.delivery.zip" @input="updateZip" />
-            </column>
-            <column width="8">
-              <label for="city">By *</label>
-              <input type="text" id="city" ref="city" placeholder="Aarhus" :value="order.delivery.city" @input="updateCity" />
-            </column>
-          </row>
+          <template v-if="user.deliveryAddresses.length > 0">
+            <div v-for="(deliveryAddress, index) in user.deliveryAddresses" class="Levering-address-choice" @click="selectAddress({ index })">
+              <input
+                type="radio"
+                name="deliveryAddress"
+                :id="`deliveryAddress-${index}`"
+                :value="index"
+                :checked="deliveryAddress.selected"
+              />
+              <label :for="`deliveryAddress-${index}`">
+                {{deliveryAddress.name}}<br />
+                {{deliveryAddress.street}} {{deliveryAddress.number}}<br />
+                <template v-if="deliveryAddress.extra">
+                  {{deliveryAddress.extra}}<br />
+                </template>
+                {{deliveryAddress.zip}} {{deliveryAddress.city}}
+                <template v-if="deliveryAddress.description">
+                  <br /><span class="description">{{deliveryAddress.description}}</span>
+                </template>
+              </label>
+            </div>
+            <div class="Levering-address-choice" @click="unselectAddress">
+              <input
+                type="radio"
+                name="deliveryAddress"
+                id="deliveryAddress-none"
+                value=""
+                :checked="!selectedAddress"
+              />
+              <label for="deliveryAddress-none">
+                Brug en anden adresse
+              </label>
+            </div>
+          </template>
+          <div v-show="!selectedAddress">
+            <h3>Søg leveringsadresse</h3>
+            <label for="deliveryPhone">Telefonnummer på modtageren</label>
+            <row :style="{ padding: 0, margin: '0 -0.5rem' }">
+              <column width="8">
+                <input type="tel" id="deliveryPhone" ref="deliveryPhone" placeholder="12 34 56 78" v-model="deliveryAddressPhone" @keyup.enter="getDeliveryAddressFromPhone"/>
+              </column>
+              <column width="4">
+                <div @click.stop="getDeliveryAddressFromPhone">
+                  <cta-button to="#" :style="{
+                    'margin-top': '0.25rem',
+                    'line-height': '1.6rem',
+                    'padding-top': '0.75rem',
+                    'padding-bottom': '0.75rem',
+                  }">
+                    Søg
+                  </cta-button>
+                </div>
+              </column>
+            </row>
+            <p v-if="deliveryPhoneError" class="error">Vi kunne desværre ikke finde en adresse ud fra det indtastede telefonnummer.</p>
+            <p v-if="!deliveryPhoneError" class="description">Vi bruger nummeroplysningen til nemt og hurtigt at finde din leveringsadresse.</p>
+            <label for="name">Navn *</label>
+            <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="order.delivery.name" @input="updateName" />
+            <row :style="{ padding: 0, margin: '-0.5rem' }">
+              <column width="9">
+                <label for="street">Vej *</label>
+                <input type="text" id="street" ref="street" placeholder="Dinvej" :value="order.delivery.street" @input="updateStreet" />
+              </column>
+              <column width="3">
+                <label for="number">Nummer *</label>
+                <input type="text" id="number" ref="number" placeholder="20" :value="order.delivery.number" @input="updateNumber" />
+              </column>
+            </row>
+            <label for="extra">Ekstra information til adresse</label>
+            <input type="text" id="extra" ref="extra" placeholder="Afdeling 3083, stue 7" maxlength="40" :value="order.delivery.extra" @input="updateExtra" />
+            <p class="description">Eksempelvis afdeling og stue på hospital. {{order.delivery.extra ? order.delivery.extra.length : 0}} af 40 tegn brugt.</p>
+            <row :style="{ padding: 0, margin: '-0.5rem' }">
+              <column width="4">
+                <label for="zip">Postnummer *</label>
+                <input type="text" id="zip" ref="zip" placeholder="8000" :value="order.delivery.zip" @input="updateZip" />
+              </column>
+              <column width="8">
+                <label for="city">By *</label>
+                <input type="text" id="city" ref="city" placeholder="Aarhus" :value="order.delivery.city" @input="updateCity" />
+              </column>
+            </row>
+          </div>
         </box>
       </column>
       <column width="4">
@@ -165,6 +201,9 @@ export default {
       step: state => state.steps[1],
       nextStep: state => state.steps.find((step, i) => ((i !== 1 && !step.valid) || i === 3)),
     }),
+    selectedAddress() {
+      return this.user.deliveryAddresses.find(address => address.selected);
+    },
   },
   methods: {
     updateName(e) {
@@ -232,6 +271,14 @@ export default {
           this.deliveryPhoneError = true;
         });
     },
+    unselectAddress() {
+      this.$store.dispatch('selectDeliveryAddresses', { index: null });
+      this.focusOnInvalidField();
+    },
+    selectAddress(address) {
+      this.$store.dispatch('selectDeliveryAddresses', address);
+      this.focusOnInvalidField();
+    },
   },
   mounted() {
     const places = require('places.js'); // eslint-disable-line
@@ -271,6 +318,19 @@ export default {
 </script>
 
 <style>
+  .Levering-address-choice {
+    margin: 0rem -2rem;
+    padding: 0.5rem 2rem;
+    cursor: pointer;
+  }
+  .Levering-address-choice * {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .Levering-address-choice label {
+    margin-bottom: 0 !important;
+  }
   .Levering-right {
     text-align: right;
   }

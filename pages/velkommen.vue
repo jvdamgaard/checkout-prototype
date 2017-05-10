@@ -6,9 +6,11 @@
       <column width="4">
         <box>
           <h2>Jeg er allerede bruger på flowr.dk</h2>
-          <cta-button type="facebook" to="#">
-            Log på med Facebook
-          </cta-button>
+          <div @click="login">
+            <cta-button type="facebook" :to="nextStep.path" @click="login">
+              Log på med Facebook
+            </cta-button>
+          </div>
           <div class="Bruger-or"><span>eller</span></div>
           <label for="user-email">E-mail</label>
           <input type="email" id="user-email" ref="user-email" placeholder="din@mail.dk" v-model="userEmail" />
@@ -17,9 +19,9 @@
           <input type="checkbox" name="remember" :checked="true" />
           <label for="remember">Husk mig</label>
           <p>
-            <cta-button type="primary" to="#" :inactive="(!userEmail || !userPassword)">
-              Log på
-            </cta-button>
+            <div @click="login">
+              <cta-button type="primary" :to="nextStep.path" :inactive="(!userEmail || !userPassword) ">Log på</cta-button>
+            </div>
           </p>
         </box>
       </column>
@@ -87,6 +89,54 @@ export default {
     updatePhone(e) {
       this.$store.dispatch('updateUser', { phone: e.target.value });
     },
+    login() {
+      this.$store.commit('updateUserName', 'Jakob Viskum Damgaard');
+      this.$store.commit('updateUserPhone', '31905030');
+      this.$store.commit('updateUserEmail', 'jakob.viskum.damgaard@gmail.com');
+      this.$store.commit('addUserDeliveryAddresses', {
+        selected: true,
+        name: 'Birgitte Viskum',
+        city: 'Risskov',
+        zip: '8240',
+        street: 'Agerbæksvej',
+        number: '8N',
+      });
+      this.$store.commit('addUserDeliveryAddresses', {
+        selected: false,
+        name: 'Lene Nannerup',
+        city: 'Åbyhøj',
+        zip: '8230',
+        street: 'Jønhøjvej',
+        number: '20',
+      });
+      this.$store.commit('addUserInvoiceAddresses', {
+        selected: true,
+        city: 'Åbyhøj',
+        zip: '8230',
+        street: 'Jønhøjvej',
+        number: '20',
+      });
+      this.$store.commit('addUserInvoiceAddresses', {
+        selected: false,
+        city: 'Aarhus C',
+        zip: '8000',
+        street: 'Volden',
+        number: '12, 2.',
+      });
+      this.$store.commit('addUserPaymentCards', {
+        selected: true,
+        number: '457122******1234',
+        month: '09',
+        year: '19',
+      });
+      this.$store.commit('addUserPaymentCards', {
+        selected: false,
+        number: '457122******5678',
+        month: '03',
+        year: '22',
+      });
+      this.$store.commit('checkValidation');
+    },
   },
   mounted() {
     const refs = [this.$refs.name, this.$refs.email, this.$refs.phone];
@@ -99,6 +149,12 @@ export default {
 </script>
 
 <style>
+  .Kvittering-product-image {
+    padding-bottom: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
   .Bruger-center {
     display: flex;
     justify-content: center;

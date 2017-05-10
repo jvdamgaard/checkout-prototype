@@ -5,6 +5,8 @@ export const state = {
     name: null,
     email: null,
     invoiceAddresses: [],
+    deliveryAddresses: [],
+    paymentCards: [],
   },
   order: {
     invoice: {
@@ -88,11 +90,16 @@ export const mutations = {
       !!s.user.name // should be set
     );
     s.steps[1].valid = (
-      !!s.order.delivery.name && // should be set
-      !!s.order.delivery.street && // should be set
-      !!s.order.delivery.number && // should be set
-      !!s.order.delivery.zip && // should be set
-      !!s.order.delivery.city && // should be set
+      (
+        !!s.user.deliveryAddresses.find(address => address.selected) ||
+        (
+          !!s.order.delivery.name && // should be set
+          !!s.order.delivery.street && // should be set
+          !!s.order.delivery.number && // should be set
+          !!s.order.delivery.zip && // should be set
+          !!s.order.delivery.city // should be set
+        )
+      ) &&
       !!s.order.delivery.date // should be set
     );
     s.steps[2].valid = (
@@ -101,14 +108,20 @@ export const mutations = {
         (
           !!s.order.invoice.name && // should be set
           !!s.order.invoice.street && // should be set
+          !!s.order.invoice.number && // should be set
           !!s.order.invoice.zip && // should be set
           !!s.order.invoice.city // should be set
         )
       ) &&
-      !!s.order.payment.details.number && // should be set
-      !!s.order.payment.details.month && // should be set
-      !!s.order.payment.details.year && // should be set
-      !!s.order.payment.details.cvc // should be set
+      (
+        !!s.user.paymentCards.find(card => card.selected) ||
+        (
+          !!s.order.payment.details.number && // should be set
+          !!s.order.payment.details.month && // should be set
+          !!s.order.payment.details.year && // should be set
+          !!s.order.payment.details.cvc // should be set
+        )
+      )
     );
     s.steps[3].valid = (
       !!s.steps[1].valid && // should be set
@@ -130,11 +143,43 @@ export const mutations = {
       selected: val.selected || false,
     }];
   },
+  addUserInvoiceAddresses(s, val) {
+    s.user.invoiceAddresses.push({
+      ...val,
+      name: val.name || s.user.name || 'Lars Flemming :-)',
+      selected: val.selected || false,
+    });
+  },
   updateUserInvoiceAddressesSelection(s, val) {
     s.user.invoiceAddresses = s.user.invoiceAddresses.map((address, i) => ({
       ...address,
       selected: i === val,
     }));
+  },
+  updateUserDeliveryAddressesSelection(s, val) {
+    s.user.deliveryAddresses = s.user.deliveryAddresses.map((address, i) => ({
+      ...address,
+      selected: i === val,
+    }));
+  },
+  updateUserPaymentCardSelection(s, val) {
+    s.user.paymentCards = s.user.paymentCards.map((card, i) => ({
+      ...card,
+      selected: i === val,
+    }));
+  },
+  addUserDeliveryAddresses(s, val) {
+    s.user.deliveryAddresses.push({
+      ...val,
+      name: val.name || s.user.name || 'Lars Flemming :-)',
+      selected: val.selected || false,
+    });
+  },
+  addUserPaymentCards(s, val) {
+    s.user.paymentCards.push({
+      ...val,
+      selected: val.selected || false,
+    });
   },
 
   updateInvoiceName(s, val) {
@@ -244,5 +289,14 @@ export const actions = {
   },
   selectInvoiceAddresses({ commit }, { index }) {
     commit('updateUserInvoiceAddressesSelection', index);
+    commit('checkValidation');
+  },
+  selectDeliveryAddresses({ commit }, { index }) {
+    commit('updateUserDeliveryAddressesSelection', index);
+    commit('checkValidation');
+  },
+  selectPaymentCard({ commit }, { index }) {
+    commit('updateUserPaymentCardSelection', index);
+    commit('checkValidation');
   },
 };

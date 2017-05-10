@@ -50,12 +50,12 @@
           <h2>Levering <nuxt-link to="/levering/">rediger</nuxt-link></h2>
           <p v-if="!steps[1].valid" class="error">Mangler at blive udfyldt. <nuxt-link to="/levering/">Rediger levering</nuxt-link> før du kan købe.</p>
           <p>
-            {{order.delivery.name}}<br />
-            {{order.delivery.street}} {{order.delivery.number}}<br />
-            <template v-if="order.delivery.extra">
-              {{order.delivery.extra}}<br />
+            {{selectedDeliveryAddress.name}}<br />
+            {{selectedDeliveryAddress.street}} {{selectedDeliveryAddress.number}}<br />
+            <template v-if="selectedDeliveryAddress.extra">
+              {{selectedDeliveryAddress.extra}}<br />
             </template>
-            {{order.delivery.zip}} {{order.delivery.city}}<br />
+            {{selectedDeliveryAddress.zip}} {{selectedDeliveryAddress.city}}<br />
             <em>{{order.delivery.date}} kl. {{deliveryTime}}</em>
           </p>
           <h3>Kort</h3>
@@ -76,10 +76,11 @@
           <h3>Betalingsmetode</h3>
           <p>
             <img src="https://jvdamgaard.github.io/checkout-prototype/images/visa.png">
-            {{order.payment.details.number.substring(0,4)}}
-            {{order.payment.details.number.substring(4,6)}}**
+            {{selectedPaymentCard.number.substring(0,4)}}
+            {{selectedPaymentCard.number.substring(4,6)}}**
             ****
-            {{order.payment.details.number.substring(12,16)}}
+            {{selectedPaymentCard.number.substring(12,16)}}
+            <span class="description">{{selectedPaymentCard.month}}/{{selectedPaymentCard.year}}</span>
           </p>
         </box>
         <box fit="true">
@@ -187,6 +188,20 @@ export default {
         selectedInvoiceAddress = this.order.invoice;
       }
       return selectedInvoiceAddress;
+    },
+    selectedDeliveryAddress() {
+      let selectedDeliveryAddress = this.user.deliveryAddresses.find(address => address.selected);
+      if (!selectedDeliveryAddress) {
+        selectedDeliveryAddress = this.order.delivery;
+      }
+      return selectedDeliveryAddress;
+    },
+    selectedPaymentCard() {
+      let selectedPaymentCard = this.user.paymentCards.find(card => card.selected);
+      if (!selectedPaymentCard) {
+        selectedPaymentCard = this.order.payment.details;
+      }
+      return selectedPaymentCard;
     },
   },
   methods: {

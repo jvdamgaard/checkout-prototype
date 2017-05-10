@@ -39,7 +39,7 @@
               </label>
             </div>
           </template>
-          <template v-if="!selectedAddress">
+          <div v-show="!selectedAddress">
             <label for="name">Navn *</label>
             <input type="text" id="name" ref="name" placeholder="Fulde Navn" :value="user.name" @input="updateName" />
             <row :style="{ padding: 0, margin: '-0.5rem' }">
@@ -65,7 +65,7 @@
                 <input type="text" id="city" ref="city" placeholder="Aarhus" :value="order.invoice.city" @input="updateCity" />
               </column>
             </row>
-          </template>
+          </div>
         </box>
       </column>
       <column width="4">
@@ -83,10 +83,41 @@
             <div class="Betaling-payment-option-price">0,-</div>
             <div class="Betaling-payment-option-description description">Vi accepterer Dankort, Visa/Dankort, Visa, Visa Electron og MasterCard.</div>
           </div>
+          <div v-if="user.paymentCards.length > 0" style="padding: 0.5rem 2rem 0">
+            <div v-for="(paymentCard, index) in user.paymentCards" class="Betaling-card-choice" @click="selectPaymentCard({ index })">
+              <input
+                type="radio"
+                name="paymentCard"
+                :id="`paymentCard-${index}`"
+                :value="index"
+                :checked="paymentCard.selected"
+              />
+              <label :for="`paymentCard-${index}`">
+                <img src="https://jvdamgaard.github.io/checkout-prototype/images/visa.png">
+                {{paymentCard.number.substring(0,4)}}
+                {{paymentCard.number.substring(4,6)}}**
+                ****
+                {{paymentCard.number.substring(12,16)}}
+                <span class="description">{{paymentCard.month}}/{{paymentCard.year}}</span>
+              </label>
+            </div>
+            <div class="Betaling-card-choice" @click="unselectPaymentCard">
+              <input
+                type="radio"
+                name="paymentCard"
+                id="paymentCard-none"
+                value=""
+                :checked="!selectedPaymentCard"
+              />
+              <label for="paymentCard-none">
+                Brug et andet kort
+              </label>
+            </div>
+          </div>
           <div class="Betaling-card" :class="{
               'Betaling-card--show-icon': order.payment.details.number.length > 3,
               'Betaling-card--show-brand': order.payment.details.number.length > 5,
-            }">
+            }" v-show="!selectedPaymentCard">
             <h2>Nordea <img :src="`https://jvdamgaard.github.io/checkout-prototype/images/visa${(order.payment.details.number.length < 6) ? '' : '-negative'}.svg`" /></h2>
             <label for="card">Kortnummer *</label>
             <input type="text" id="card" ref="card" placeholder="xxxx xxxx xxxx xxxx" minLength="16" maxLength="16" required :value="order.payment.details.number" @input="updateCardNumber" />
@@ -242,6 +273,9 @@ export default {
     selectedAddress() {
       return this.user.invoiceAddresses.find(address => address.selected);
     },
+    selectedPaymentCard() {
+      return this.user.paymentCards.find(paymentCard => paymentCard.selected);
+    },
   },
   methods: {
     updateName(e) {
@@ -312,6 +346,14 @@ export default {
       this.$store.dispatch('selectInvoiceAddresses', address);
       this.focusOnInvalidField();
     },
+    unselectPaymentCard() {
+      this.$store.dispatch('selectPaymentCard', { index: null });
+      this.focusOnInvalidField();
+    },
+    selectPaymentCard(card) {
+      this.$store.dispatch('selectPaymentCard', card);
+      this.focusOnInvalidField();
+    },
   },
   mounted() {
     const places = require('places.js'); // eslint-disable-line
@@ -351,7 +393,7 @@ export default {
 </script>
 
 <style>
-  .Betaling-payment-option, .Betaling-invoice-choice {
+  .Betaling-payment-option, .Betaling-invoice-choice, .Betaling-card-choice {
     margin: 0rem -2rem;
     padding: 0.5rem 2rem;
     cursor: pointer;
@@ -365,13 +407,18 @@ export default {
     font-weight: 700;
     margin-bottom: 0 !important;
   }
-  .Betaling-invoice-choice label {
+  .Betaling-invoice-choice label, .Betaling-card-choice label {
     margin-bottom: 0 !important;
   }
   .Betaling-payment-option label img {
     vertical-align: middle;
     height: 1rem;
     margin-left: 0.5rem;
+  }
+  .Betaling-card-choice label img {
+    vertical-align: middle;
+    height: 1rem;
+    margin-right: 0.5rem;
   }
   .Betaling-payment-option-price {
     float: right;
