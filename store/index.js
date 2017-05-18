@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const state = {
+  prototypeAccepted: false,
   user: {
     name: null,
     email: null,
@@ -207,6 +208,7 @@ export const mutations = {
   updateDeliveryCity(s, val) { s.order.delivery.city = val; },
   updateDeliveryDate(s, val) { s.order.delivery.date = val; },
   updateDeliveryCard(s, val) { s.order.delivery.card = val; },
+  prototypeAccepted(s) { s.prototypeAccepted = true; },
   updateDeliveryTime(s, val) {
     s.order.delivery.times = s.order.delivery.times.map(time => ({
       ...time,
@@ -298,5 +300,8 @@ export const actions = {
   selectPaymentCard({ commit }, { index }) {
     commit('updateUserPaymentCardSelection', index);
     commit('checkValidation');
+  },
+  acceptPrototype({ commit }) {
+    commit('prototypeAccepted');
   },
 };
