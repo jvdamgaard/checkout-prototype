@@ -49,17 +49,17 @@ export const state = {
       phone: null,
     },
     products: [{
-      image: 'https://flowr.dk/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/b/o/boeket_sk1_300.png',
+      image: '/images/small.png',
       size: 'Stor i slaget',
       price: 300,
       selected: false,
     }, {
-      image: 'https://flowr.dk/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/b/o/boeket_sk2_400.png',
+      image: '/images/medium.png',
       size: 'Flottenhejmer',
       price: 400,
       selected: true,
     }, {
-      image: 'https://flowr.dk/media/catalog/product/cache/1/thumbnail/9df78eab33525d08d6e5fb8d27136e95/b/o/boeket_sk3_500.png',
+      image: '/images/large.png',
       size: 'Blærerøv',
       price: 500,
       selected: false,
