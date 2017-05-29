@@ -49,17 +49,17 @@ export const state = {
       phone: null,
     },
     products: [{
-      image: '/images/small.png',
+      image: '/checkout-prototype/images/small.png',
       size: 'Stor i slaget',
       price: 300,
       selected: false,
     }, {
-      image: '/images/medium.png',
+      image: '/checkout-prototype/images/medium.png',
       size: 'Flottenhejmer',
       price: 400,
       selected: true,
     }, {
-      image: '/images/large.png',
+      image: '/checkout-prototype/images/large.png',
       size: 'Blærerøv',
       price: 500,
       selected: false,
