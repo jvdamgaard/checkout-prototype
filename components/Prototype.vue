@@ -6,6 +6,11 @@
         <p>This is a prototype of a checkout flow. It's solely ment for user tests.</p>
         <p>No integration with external system, and your data will not be saved.</p>
         <p>A lot of things have been faked and some functionality is missing.</p>
+        <h2>Only build for</h2>
+        <p>
+          <a href="https://www.google.com/chrome/browser/desktop/">Google Chrome browser</a><br>
+          a desktop screen above 1200px in width
+        </p>
         <p @click.stop="ok"><cta-button to="#" type="primary">OK</cta-button></p>
       </div>
     </div>
@@ -50,7 +55,7 @@ export default {
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width: 20rem;
+    width: 40rem;
     margin: 0 auto;
   }
   .Prototype-content {
