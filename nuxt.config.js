@@ -19,7 +19,14 @@ module.exports = {
   loading: { color: '#5F306A' },
   css: ['~assets/css/main.css'],
   vendor: ['axios'],
-
+  manifest: {
+    name: 'Checkout prototype',
+    description: 'Checkout prototype',
+    theme_color: '#5F306A',
+  },
+  modules: [
+    '@nuxtjs/pwa',
+  ],
   router: {
     base: (process.env.NODE_ENV === 'generate') ? '/checkout-prototype/' : '/',
   },

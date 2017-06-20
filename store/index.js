@@ -1,88 +1,90 @@
 import axios from 'axios';
 
-export const state = {
-  prototypeAccepted: false,
-  user: {
-    name: null,
-    email: null,
-    invoiceAddresses: [],
-    deliveryAddresses: [],
-    paymentCards: [],
-  },
-  order: {
-    invoice: {
+export function state() {
+  return {
+    prototypeAccepted: false,
+    user: {
       name: null,
-      street: null,
-      number: null,
-      extra: null,
-      zip: null,
-      city: null,
+      email: null,
+      invoiceAddresses: [],
+      deliveryAddresses: [],
+      paymentCards: [],
     },
-    payment: {
-      type: 'card',
-      details: {
-        number: '',
-        month: '',
-        year: '',
-        cvc: '',
+    order: {
+      invoice: {
+        name: null,
+        street: null,
+        number: null,
+        extra: null,
+        zip: null,
+        city: null,
       },
-      voucher: {
-        title: '',
-        savings: 0,
+      payment: {
+        type: 'card',
+        details: {
+          number: '',
+          month: '',
+          year: '',
+          cvc: '',
+        },
+        voucher: {
+          title: '',
+          savings: 0,
+        },
       },
-    },
-    delivery: {
-      name: null,
-      street: null,
-      number: null,
-      extra: null,
-      zip: null,
-      city: null,
-      date: null,
-      times: [{
-        value: '08:00 - 21:00',
+      delivery: {
+        name: null,
+        street: null,
+        number: null,
+        extra: null,
+        zip: null,
+        city: null,
+        date: null,
+        times: [{
+          value: '08:00 - 21:00',
+          selected: true,
+        }, {
+          value: '08:00 - 16:00',
+          selected: false,
+        }],
+        phone: null,
+      },
+      products: [{
+        image: '/checkout-prototype/images/small.png',
+        size: 'Stor i slaget',
+        price: 300,
+        selected: false,
+      }, {
+        image: '/checkout-prototype/images/medium.png',
+        size: 'Flottenhejmer',
+        price: 400,
         selected: true,
       }, {
-        value: '08:00 - 16:00',
+        image: '/checkout-prototype/images/large.png',
+        size: 'Blærerøv',
+        price: 500,
         selected: false,
       }],
-      phone: null,
     },
-    products: [{
-      image: '/checkout-prototype/images/small.png',
-      size: 'Stor i slaget',
-      price: 300,
-      selected: false,
+    steps: [{
+      title: 'Velkommen',
+      path: '/velkommen/',
+      valid: false,
     }, {
-      image: '/checkout-prototype/images/medium.png',
-      size: 'Flottenhejmer',
-      price: 400,
-      selected: true,
+      title: 'Levering',
+      path: '/levering/',
+      valid: false,
     }, {
-      image: '/checkout-prototype/images/large.png',
-      size: 'Blærerøv',
-      price: 500,
-      selected: false,
+      title: 'Betaling',
+      path: '/betaling/',
+      valid: false,
+    }, {
+      title: 'Bekræft',
+      path: '/bekraeft/',
+      valid: false,
     }],
-  },
-  steps: [{
-    title: 'Velkommen',
-    path: '/velkommen/',
-    valid: false,
-  }, {
-    title: 'Levering',
-    path: '/levering/',
-    valid: false,
-  }, {
-    title: 'Betaling',
-    path: '/betaling/',
-    valid: false,
-  }, {
-    title: 'Bekræft',
-    path: '/bekraeft/',
-    valid: false,
-  }],
-};
+  };
+}
 
 export const mutations = {
   checkValidation(s) {
