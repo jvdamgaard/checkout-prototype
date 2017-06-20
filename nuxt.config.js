@@ -26,6 +26,7 @@ module.exports = {
   },
   modules: [
     '@nuxtjs/pwa',
+    '@nuxtjs/optimize',
   ],
   router: {
     base: (process.env.NODE_ENV === 'generate') ? '/checkout-prototype/' : '/',
